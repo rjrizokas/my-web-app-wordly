@@ -14,13 +14,13 @@ WORDS_FILE = 'words.json'
 def read_words():
     if not os.path.exists(WORDS_FILE):
         return {
-            "monday": "WORLD",
-            "tuesday": "PLANE",
-            "wednesday": "STAKE",
-            "thursday": "BROWN",
-            "friday": "SWEET",
-            "saturday": "BLIND",
-            "sunday": "STONE"
+            "monday": "ПЕСНЯ",
+            "tuesday": "КОСТЬ",
+            "wednesday": "СФЕРА",
+            "thursday": "ЛЕВША",
+            "friday": "УГОРЬ",
+            "saturday": "БРОНЬ",
+            "sunday": "МЕСТО"
         }
     with open(WORDS_FILE, 'r', encoding='utf-8') as file:
         return json.load(file)
@@ -34,7 +34,7 @@ def write_words(words):
 def get_word():
     words = read_words()
     day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
-    word = words.get(day_of_week, "SNAKE")
+    word = words.get(day_of_week, "ГОНКА")
     return jsonify({"word": word})
 
 @app.route('/update_word', methods=['POST'])
