@@ -1,21 +1,22 @@
-async function updateAllWords() {
+async function updateWords() {
+    const member = document.title.split(' ')[2].toLowerCase();
     const words = {
-        monday: document.getElementById('word1').value,
-        tuesday: document.getElementById('word2').value,
-        wednesday: document.getElementById('word3').value,
-        thursday: document.getElementById('word4').value,
-        friday: document.getElementById('word5').value,
-        saturday: document.getElementById('word6').value,
-        sunday: document.getElementById('word7').value
+        monday: document.getElementById('monday').value,
+        tuesday: document.getElementById('tuesday').value,
+        wednesday: document.getElementById('wednesday').value,
+        thursday: document.getElementById('thursday').value,
+        friday: document.getElementById('friday').value,
+        saturday: document.getElementById('saturday').value,
+        sunday: document.getElementById('sunday').value
     };
 
     try {
-        const response = await fetch('https://my-web-app-wordly.onrender.com/update_word', {
+        const response = await fetch('https://your-domain.com/update_word', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(words)
+            body: JSON.stringify({ [member]: words })
         });
 
         if (response.ok) {
