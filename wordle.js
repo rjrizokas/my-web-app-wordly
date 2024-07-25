@@ -99,15 +99,17 @@ const keyMapping = {
 
 function processKey() {
     let key = this.id;
-    if (key === "Enter" || key === "Backspace") {
-        let event = { "code": key };
-        processInput(event);
-    } else {
-        let letter = this.innerText;
-        let event = { "code": "Key" + letter };
-        processInput(event);
-    }
+    let letter = this.innerText;
+
+    console.log(`Virtual key pressed: ${key}, Letter: ${letter}`);
+
+    let event = {
+        "code": key === "Enter" ? "Enter" : key === "Backspace" ? "Backspace" : "Key" + letter
+    };
+
+    processInput(event);
 }
+
 
 
 function processInput(e) {
