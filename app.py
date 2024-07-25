@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
+
 app = Flask(__name__)
 CORS(app)
 
@@ -14,6 +15,10 @@ words = {
     "word6": "ВЕСНА",
     "word7": "ЗВЕНО"
 }
+
+@app.route('/')
+def index():
+    return "Welcome to the Wordly API!"
 
 @app.route('/get_word', methods=['GET'])
 def get_word():
