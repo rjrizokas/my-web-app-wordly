@@ -22,6 +22,24 @@ body {
     margin-top: 20px; /* Добавляем верхний отступ для улучшения видимости на мобильных устройствах */
 }
 
+.btn {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 14px; /* Уменьшаем размер шрифта */
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%; /* Кнопка на всю ширину контейнера */
+    margin-bottom: 20px; /* Отступ снизу кнопки */
+}
+
+.btn:hover {
+    background-color: #218838;
+}
+
 .form-group {
     margin-bottom: 15px;
 }
@@ -38,24 +56,6 @@ body {
     font-size: 14px; /* Уменьшаем размер шрифта */
     border: 1px solid #ddd;
     border-radius: 4px;
-}
-
-.btn {
-    display: inline-block;
-    padding: 12px 20px;
-    font-size: 14px; /* Уменьшаем размер шрифта */
-    color: #fff;
-    background-color: #28a745;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-    margin-top: 20px;
-    width: 100%; /* Кнопка на всю ширину контейнера */
-}
-
-.btn:hover {
-    background-color: #218838;
 }
 
 #status {
