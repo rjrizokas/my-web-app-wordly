@@ -23,8 +23,13 @@ def index():
 @app.route('/get_word', methods=['GET'])
 def get_word():
     day_of_week = request.args.get('day_of_week')
-    word = words.get(day_of_week, "Not Found")
-    return jsonify({"word": word})
+    if day_of_week:
+        word = words.get(day_of_week, "Not Found")
+        return jsonify({"word": word})
+    else:
+        # Возвращаем все слова, если параметр не указан
+        return jsonify(words)
+
 
 @app.route('/update_word', methods=['POST'])
 def update_word():
