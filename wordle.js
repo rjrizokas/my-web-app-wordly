@@ -242,3 +242,4 @@ function update() {
     row += 1;
     col = 0;
 }
+

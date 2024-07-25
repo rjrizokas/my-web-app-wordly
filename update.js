@@ -1,18 +1,16 @@
-document.getElementById('updateButton').addEventListener('click', updateWords);
-
-async function updateWords() {
+async function updateAllWords() {
     const words = {
-        monday: document.getElementById('word1').value.toUpperCase(),
-        tuesday: document.getElementById('word2').value.toUpperCase(),
-        wednesday: document.getElementById('word3').value.toUpperCase(),
-        thursday: document.getElementById('word4').value.toUpperCase(),
-        friday: document.getElementById('word5').value.toUpperCase(),
-        saturday: document.getElementById('word6').value.toUpperCase(),
-        sunday: document.getElementById('word7').value.toUpperCase()
+        monday: document.getElementById('word1').value,
+        tuesday: document.getElementById('word2').value,
+        wednesday: document.getElementById('word3').value,
+        thursday: document.getElementById('word4').value,
+        friday: document.getElementById('word5').value,
+        saturday: document.getElementById('word6').value,
+        sunday: document.getElementById('word7').value
     };
 
     try {
-        const response = await fetch('https://your-domain.com/update_words', {
+        const response = await fetch('https://my-web-app-wordly.onrender.com/update_word', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
