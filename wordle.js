@@ -90,12 +90,23 @@ function intialize() {
     });
 }
 
-
 const keyMapping = {
     'KeyQ': 'Й', 'KeyW': 'Ц', 'KeyE': 'У', 'KeyR': 'К', 'KeyT': 'Е', 'KeyY': 'Н', 'KeyU': 'Г', 'KeyI': 'Ш', 'KeyO': 'Щ', 'KeyP': 'З',
     'KeyA': 'Ф', 'KeyS': 'Ы', 'KeyD': 'В', 'KeyF': 'А', 'KeyG': 'П', 'KeyH': 'Р', 'KeyJ': 'О', 'KeyK': 'Л', 'KeyL': 'Д',
     'KeyZ': 'Я', 'KeyX': 'Ч', 'KeyC': 'С', 'KeyV': 'М', 'KeyB': 'И', 'KeyN': 'Т', 'KeyM': 'Ь', 'KeyЮ': 'Ю', 
 };
+
+function getLetterFromKeyCode(keyCode) {
+    // Проверяем, есть ли символ в keyMapping
+    if (keyMapping[keyCode]) {
+        return keyMapping[keyCode];
+    }
+    // Если нет, возвращаем символ, извлеченный из keyCode
+    else if (keyCode.startsWith("Key")) {
+        return keyCode.slice(3);
+    }
+    return "";
+}
 
 
 function processKey() {
@@ -119,17 +130,14 @@ function processInput(e) {
     if (gameOver) return;
 
     let keyCode = e.code;
-    let letter = "";
+    let letter = getLetterFromKeyCode(keyCode); // Используем универсальную функцию
 
-    // Получаем букву по коду клавиши
-    if (keyCode.startsWith("Key") && keyMapping[keyCode]) {
-        letter = keyMapping[keyCode];
-    } else if (keyCode === "Backspace") {
+    if (keyCode === "Backspace") {
         if (col > 0) {
             col -= 1;
+            let currTile = document.getElementById(row.toString() + '-' + col.toString());
+            currTile.innerText = "";
         }
-        let currTile = document.getElementById(row.toString() + '-' + col.toString());
-        currTile.innerText = "";
         return;
     } else if (keyCode === "Enter") {
         update();
@@ -150,6 +158,8 @@ function processInput(e) {
         document.getElementById("answer").innerText = word;
     }
 }
+
+
 
 
 
@@ -232,5 +242,4 @@ function update() {
     row += 1;
     col = 0;
 }
-
 
