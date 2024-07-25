@@ -13,15 +13,6 @@ var guessList = ["aahed", "aalii", "aargh", "aarti", "abaca", "abaci", "abacs", 
 
 guessList = guessList.concat(wordList);
 
-var today = new Date();
-if(today.getDay() == 0 ) word = "SWEET";
-if(today.getDay() == 1 ) word = "GLOVE";
-if(today.getDay() == 2 ) word = "FRAME";
-if(today.getDay() == 3 ) word = "MAKER";
-if(today.getDay() == 4 ) word = "SQUID";
-if(today.getDay() == 5 ) word = "BLADE";
-if(today.getDay() == 6 ) word = "BLINK";
-
 window.onload = function(){
     initialize();
 }
