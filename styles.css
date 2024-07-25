@@ -3,6 +3,9 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрирование содержимого по горизонтали */
 }
 
 .container {
@@ -10,11 +13,13 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     padding: 10px;
+    max-width: 1200px; /* Максимальная ширина контейнера */
 }
 
 .column {
     flex: 1;
     margin: 10px;
+    max-width: 45%; /* Ограничение ширины колонок для больших экранов */
 }
 
 form {
@@ -36,13 +41,15 @@ input[type="text"] {
 
 button {
     display: block;
-    margin: 20px auto;
-    padding: 10px;
+    margin: 20px 0; /* Отступ сверху и снизу от кнопки */
+    padding: 10px 20px; /* Паддинг кнопки */
     font-size: 1.2em;
     background-color: #28a745;
     color: #fff;
     border: none;
     cursor: pointer;
+    text-align: center; /* Центрирование текста внутри кнопки */
+    border-radius: 5px; /* Закругление углов кнопки */
 }
 
 button:hover {
