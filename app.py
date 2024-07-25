@@ -7,8 +7,8 @@ import datetime
 app = Flask(__name__)
 CORS(app)
 
-# Путь к файлу words.json в постоянном хранилище
-persistent_dir = '/persistent'
+# Путь к файлу words.json в постоянном хранилище Render
+persistent_dir = '/mnt/persistent'
 words_file_path = os.path.join(persistent_dir, 'words.json')
 
 # Функция для чтения слов из файла
@@ -17,28 +17,33 @@ def read_words_from_file():
         with open(words_file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
-        return {
-            "monday": "ПЕСНЯ",
-            "tuesday": "КОСТЬ",
-            "wednesday": "СФЕРА",
-            "thursday": "ЛЕВША",
-            "friday": "УГОРЬ",
-            "saturday": "БРОНЬ",
-            "sunday": "МЕСТО"
+        # Если файл не найден, создаем его с дефолтными значениями
+        words = {
+            "monday": "СТЕНА",
+            "tuesday": "СТЕНА",
+            "wednesday": "СТЕНА",
+            "thursday": "СТЕНА",
+            "friday": "СТЕНА",
+            "saturday": "СТЕНА",
+            "sunday": "СТЕНА"
         }
+        write_words_to_file(words)
+        return words
 
 # Функция для записи слов в файл
 def write_words_to_file(words):
     if not os.path.exists(persistent_dir):
+        print(f"Directory {persistent_dir} does not exist. Creating...")
         os.makedirs(persistent_dir)
     with open(words_file_path, 'w', encoding='utf-8') as f:
+        print(f"Writing to file {words_file_path}")
         json.dump(words, f, ensure_ascii=False, indent=4)
 
 @app.route('/get_word', methods=['GET'])
 def get_word():
     words = read_words_from_file()
     day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
-    word = words.get(day_of_week, "SNAKE")
+    word = words.get(day_of_week, "ВЕСНА")
     return jsonify({"word": word})
 
 @app.route('/update_word', methods=['POST'])
@@ -62,4 +67,3 @@ def view_words():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
