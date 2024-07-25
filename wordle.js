@@ -17,6 +17,14 @@ var word = wordList[Math.floor(Math.random()*wordList.length)].toUpperCase();
 console.log(word);
 
 var word = "WORLD";
+var today = new Date();
+if(today.getDay() == 0 ) var word = "SWEET";
+if(today.getDay() == 1 ) var word = "GLOVE";
+if(today.getDay() == 2 ) var word = "FRAME";
+if(today.getDay() == 3 ) var word = "MAKER";
+if(today.getDay() == 4 ) var word = "SQUID";
+if(today.getDay() == 5 ) var word = "BLADE";
+if(today.getDay() == 6 ) var word = "WORLD";
 
 window.onload = function(){
     intialize();
