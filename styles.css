@@ -5,7 +5,7 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Центрирование содержимого по горизонтали */
+    align-items: center;
 }
 
 .container {
@@ -28,15 +28,11 @@ form {
     margin-bottom: 15px;
 }
 
-h2 {
-    margin: 0 0 10px 0;
-    font-size: 1.2em;
-}
-
 input[type="text"] {
     padding: 10px;
     margin-bottom: 10px;
     font-size: 1em;
+    width: 100%; /* Полная ширина для поля ввода */
 }
 
 button {
@@ -59,16 +55,29 @@ button:hover {
 /* Mobile responsiveness */
 @media (max-width: 600px) {
     .container {
-        flex-direction: column;
-        align-items: center;
+        flex-direction: column; /* Колонки становятся строками на маленьких экранах */
+        align-items: center; /* Центрирование колонок */
     }
 
     .column {
-        flex: 1 1 100%;
+        flex: 1 1 100%; /* Каждый столбец занимает 100% ширины на маленьких экранах */
         margin: 0;
+        max-width: 100%; /* Убираем ограничение ширины для мобильных устройств */
     }
 
     button {
         width: 90%;
+    }
+}
+
+/* Tablet responsiveness */
+@media (min-width: 601px) and (max-width: 900px) {
+    .container {
+        flex-direction: row; /* Два столбца на планшетах */
+    }
+
+    .column {
+        flex: 1;
+        max-width: 48%; /* Расстояние между колонками */
     }
 }
