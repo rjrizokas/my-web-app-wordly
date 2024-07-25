@@ -10,35 +10,21 @@ let wordList = ["агава", "аллах", "анфас", "аршин", "аза�
 
 let guessList = ["ааааа"];
 
-const members = {
-    "roman": "Роман",
-    "viorica": "Виорика",
-    "artem": "Артем",
-    "irina": "Ирина",
-    "elena": "Елена"
-};
-
-let currentMember = 'roman'; // Default member
+guessList = guessList.concat(wordList);
 
 window.onload = function() {
-    initialize();
+    intialize();
     fetchWord(); // Fetch the word from the server on page load
 
     // Add event listener for the Update Word button
     document.getElementById('updateWord').addEventListener('click', () => {
         fetchWord(); // Fetch the word again when the button is clicked
     });
-
-    // Add event listener for member selection
-    document.getElementById('memberSelect').addEventListener('change', function() {
-        currentMember = this.value;
-        fetchWord(); // Fetch new word for selected member
-    });
 }
 
 async function fetchWord() {
     try {
-        const response = await fetch(`https://your-domain.com/get_word?member=${currentMember}`);
+        const response = await fetch('https://my-web-app-wordly.onrender.com/get_word');
         const data = await response.json();
         word = data.word.toUpperCase();
         console.log("Current word: ", word);
@@ -47,18 +33,15 @@ async function fetchWord() {
     }
 }
 
-function initialize() {
+function intialize() {
     // Create the game board
-    const board = document.getElementById("board");
-    board.innerHTML = ''; // Clear existing board
-
     for (let r = 0; r < height; r++) {
         for (let c = 0; c < width; c++) {
             let tile = document.createElement("span");
             tile.id = r.toString() + "-" + c.toString();
             tile.classList.add("tile");
             tile.innerText = "";
-            board.appendChild(tile);
+            document.getElementById("board").appendChild(tile);
         }
     }
 
@@ -68,10 +51,6 @@ function initialize() {
         ["Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", " "],
         ["Enter", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", "⌫"]
     ];
-
-    const keyboardContainer = document.createElement("div");
-    keyboardContainer.id = "keyboard";
-    document.body.appendChild(keyboardContainer);
 
     for (let i = 0; i < keyboard.length; i++) {
         let currRow = keyboard[i];
@@ -102,7 +81,7 @@ function initialize() {
             }
             keyboardRow.appendChild(keyTile);
         }
-        keyboardContainer.appendChild(keyboardRow);
+        document.body.appendChild(keyboardRow);
     }
 
     // Listen for Key Press
@@ -118,16 +97,17 @@ const keyMapping = {
 };
 
 function getLetterFromKeyCode(keyCode) {
-    // Check if the keyCode is in keyMapping
+    // Проверяем, есть ли символ в keyMapping
     if (keyMapping[keyCode]) {
         return keyMapping[keyCode];
     }
-    // If not, return the symbol extracted from keyCode
+    // Если нет, возвращаем символ, извлеченный из keyCode
     else if (keyCode.startsWith("Key")) {
         return keyCode.slice(3);
     }
     return "";
 }
+
 
 function processKey() {
     let key = this.id;
@@ -141,11 +121,16 @@ function processKey() {
     }
 }
 
+
+
+
 function processInput(e) {
+    console.log(`Processing input: ${e.code}`);
+
     if (gameOver) return;
 
     let keyCode = e.code;
-    let letter = getLetterFromKeyCode(keyCode);
+    let letter = getLetterFromKeyCode(keyCode); // Используем универсальную функцию
 
     if (keyCode === "Backspace") {
         if (col > 0) {
@@ -159,7 +144,7 @@ function processInput(e) {
         return;
     }
 
-    // Handle letter input
+    // Обработка ввода буквы
     if (letter && col < width) {
         let currTile = document.getElementById(row.toString() + '-' + col.toString());
         if (currTile.innerText === "") {
@@ -173,6 +158,10 @@ function processInput(e) {
         document.getElementById("answer").innerText = word;
     }
 }
+
+
+
+
 
 function update() {
     let guess = "";
@@ -189,7 +178,7 @@ function update() {
     console.log(guess);
 
     if (!guessList.includes(guess)) {
-        document.getElementById("answer").innerText = "Не в списке слов";
+        document.getElementById("answer").innerText = "Not in word list";
         return;
     }
 
@@ -204,6 +193,8 @@ function update() {
             letterCount[letter] = 1;
         }
     }
+
+    console.log(letterCount);
 
     for (let c = 0; c < width; c++) {
         let currTile = document.getElementById(row.toString() + '-' + c.toString());
@@ -225,6 +216,7 @@ function update() {
         }
     }
 
+    console.log(letterCount);
     for (let c = 0; c < width; c++) {
         let currTile = document.getElementById(row.toString() + '-' + c.toString());
         let letter = currTile.innerText;
@@ -250,4 +242,3 @@ function update() {
     row += 1;
     col = 0;
 }
-
