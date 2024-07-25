@@ -133,6 +133,7 @@ function processInput(e) {
         return;
     }
 
+    // Обработка ввода буквы
     if (letter && col < width) {
         let currTile = document.getElementById(row.toString() + '-' + col.toString());
         if (currTile.innerText === "") {
@@ -146,6 +147,7 @@ function processInput(e) {
         document.getElementById("answer").innerText = word;
     }
 }
+
 
 
 function update() {
