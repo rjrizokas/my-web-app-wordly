@@ -4,87 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Words</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Подключаем CSS файл -->
     <style>
+        /* Встроенные стили для быстрого тестирования */
         body {
             font-family: Arial, sans-serif;
-            margin: 10px;
-            padding: 10px;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             background-color: #f4f4f4;
         }
-        h1 {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        form {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 5px;
-            background: #fff;
-            border-radius: 4px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"] {
-            width: calc(100% - 16px);
-            padding: 5px;
-            margin-bottom: 5px;
-            border: 1px solid #ddd;
-            border-radius: 2px;
-        }
-        button {
-            display: block;
+
+        .container {
             width: 100%;
-            padding: 5px;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-size: 5px;
-            cursor: pointer;
+            max-width: 600px;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
-        button:hover {
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px; /* Уменьшаем размер шрифта */
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px; /* Уменьшаем размер шрифта */
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px; /* Уменьшаем размер шрифта */
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
             background-color: #218838;
         }
+
         #status {
-            text-align: center;
-            margin-top: 5px;
-            font-size: 5px;
-            font-weight: bold;
+            margin-top: 10px;
+            font-size: 14px; /* Уменьшаем размер шрифта */
+            color: #d9534f;
         }
     </style>
-    <script src="update.js" defer></script> <!-- Подключите ваш JS файл -->
 </head>
 <body>
-    
-    <form id="update-form">
-        <button type="button" onclick="updateWords()">Update Words</button>
-        
-        <label for="monday">Monday:</label>
-        <input type="text" id="monday" name="monday"><br>
+    <div class="container">
+        <button class="btn" onclick="updateWords()">Update</button>
+        <form id="updateForm">
+            <div class="form-group">
+                <label for="monday">Monday:</label>
+                <input type="text" id="monday" name="monday">
+            </div>
+            <div class="form-group">
+                <label for="tuesday">Tuesday:</label>
+                <input type="text" id="tuesday" name="tuesday">
+            </div>
+            <div class="form-group">
+                <label for="wednesday">Wednesday:</label>
+                <input type="text" id="wednesday" name="wednesday">
+            </div>
+            <div class="form-group">
+                <label for="thursday">Thursday:</label>
+                <input type="text" id="thursday" name="thursday">
+            </div>
+            <div class="form-group">
+                <label for="friday">Friday:</label>
+                <input type="text" id="friday" name="friday">
+            </div>
+            <div class="form-group">
+                <label for="saturday">Saturday:</label>
+                <input type="text" id="saturday" name="saturday">
+            </div>
+            <div class="form-group">
+                <label for="sunday">Sunday:</label>
+                <input type="text" id="sunday" name="sunday">
+            </div>
+        </form>
+        <div id="status"></div>
+    </div>
 
-        <label for="tuesday">Tuesday:</label>
-        <input type="text" id="tuesday" name="tuesday"><br>
-
-        <label for="wednesday">Wednesday:</label>
-        <input type="text" id="wednesday" name="wednesday"><br>
-
-        <label for="thursday">Thursday:</label>
-        <input type="text" id="thursday" name="thursday"><br>
-
-        <label for="friday">Friday:</label>
-        <input type="text" id="friday" name="friday"><br>
-
-        <label for="saturday">Saturday:</label>
-        <input type="text" id="saturday" name="saturday"><br>
-
-        <label for="sunday">Sunday:</label>
-        <input type="text" id="sunday" name="sunday"><br>
-
-    </form>
-    <div id="status"></div>
+    <script src="update.js"></script>
 </body>
 </html>
