@@ -13,8 +13,13 @@ let guessList = ["ааааа"];
 guessList = guessList.concat(wordList);
 
 window.onload = function() {
-    initialize();
+    intialize();
     fetchWord(); // Fetch the word from the server on page load
+
+    // Add event listener for the Update Word button
+    document.getElementById('updateWord').addEventListener('click', () => {
+        fetchWord(); // Fetch the word again when the button is clicked
+    });
 }
 
 async function fetchWord() {
@@ -28,7 +33,7 @@ async function fetchWord() {
     }
 }
 
-function initialize() {
+function intialize() {
     // Create the game board
     for (let r = 0; r < height; r++) {
         for (let c = 0; c < width; c++) {
@@ -54,23 +59,26 @@ function initialize() {
 
         for (let j = 0; j < currRow.length; j++) {
             let keyTile = document.createElement("div");
+
             let key = currRow[j];
             keyTile.innerText = key;
-            if (key === "Enter") {
+            if (key == "Enter") {
                 keyTile.id = "Enter";
-            } else if (key === "⌫") {
+            } else if (key == "⌫") {
                 keyTile.id = "Backspace";
-            } else if (key !== " ") {
+            } else {
                 keyTile.id = "Key" + key;
             }
 
             keyTile.addEventListener("click", processKey);
 
-            keyTile.classList.add(
-                key === "Enter" ? "enter-key-tile" :
-                key === "⌫" ? "backspace-key-tile" :
-                "key-tile"
-            );
+            if (key == "Enter") {
+                keyTile.classList.add("enter-key-tile");
+            } else if (key == "⌫") {
+                keyTile.classList.add("backspace-key-tile");
+            } else {
+                keyTile.classList.add("key-tile");
+            }
             keyboardRow.appendChild(keyTile);
         }
         document.body.appendChild(keyboardRow);
@@ -81,6 +89,7 @@ function initialize() {
         processInput(e);
     });
 }
+
 
 const keyMapping = {
     'KeyQ': 'Й', 'KeyW': 'Ц', 'KeyE': 'У', 'KeyR': 'К', 'KeyT': 'Е', 'KeyY': 'Н', 'KeyU': 'Г', 'KeyI': 'Ш', 'KeyO': 'Щ', 'KeyP': 'З',
