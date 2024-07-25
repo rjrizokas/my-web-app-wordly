@@ -1,23 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Wordle</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="wordle.css">
+    <script src="wordle.js" defer></script>
+</head>
 
-<html>
-    <head>
-        <title>Wordle</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale = 1.0">
+<body>
+    <h1 id="title">Wordle</h1>
+    <hr>
+    <br>
+    <div id="board">
+    </div>
 
-        <link rel="stylesheet" href="wordle.css">
-        <script src="wordle.js"></script>
-    </head>
+    <br>
+    <h1 id="answer"></h1>
 
-    <body>
-        <h1 id="title">Wordle</h1>
-        <hr>
-        <br>
-        <div id="board">
-        </div>
+    <h2>Current Value: <span id="currentValue">WHALE</span></h2>
+    <form id="updateForm">
+        <label for="newWord">Enter new value:</label>
+        <input type="text" id="newWord" name="newWord" required>
+        <button type="submit">Update</button>
+    </form>
 
-        <br>
-        <h1 id="answer"></h1>
-    </body>
+    <script>
+        // Изначальное значение переменной
+        var word = "WHALE";
+
+        // Функция для обновления значения переменной и отображения на странице
+        function updateWord(newWord) {
+            word = newWord;
+            document.getElementById('currentValue').textContent = word;
+            document.getElementById('answer').textContent = "Updated value: " + word;
+        }
+
+        // Обработка отправки формы
+        document.getElementById('updateForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Предотвращаем перезагрузку страницы
+            var newWord = document.getElementById('newWord').value;
+            updateWord(newWord);  // Обновляем значение переменной
+            document.getElementById('newWord').value = '';  // Очищаем поле ввода
+        });
+    </script>
+</body>
 </html>
