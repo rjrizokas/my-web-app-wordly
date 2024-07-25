@@ -18,7 +18,7 @@
     <br>
     <h1 id="answer"></h1>
 
-    <h2>Current Value: <span id="currentValue">WHALE</span></h2>
+    <h2>Current Value: <span id="currentValue"></span></h2>
     <form id="updateForm">
         <label for="newWord">Enter new value:</label>
         <input type="text" id="newWord" name="newWord" required>
@@ -26,23 +26,39 @@
     </form>
 
     <script>
-        // Изначальное значение переменной
-        var word = "WHALE";
+        let word = "";
 
-        // Функция для обновления значения переменной и отображения на странице
-        function updateWord(newWord) {
-            word = newWord;
+        async function fetchWord() {
+            const response = await fetch('/get_word');
+            const data = await response.json();
+            word = data.word;
             document.getElementById('currentValue').textContent = word;
-            document.getElementById('answer').textContent = "Updated value: " + word;
         }
 
-        // Обработка отправки формы
+        async function updateWord(newWord) {
+            const response = await fetch('/update_word', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ word: newWord }),
+            });
+            if (response.ok) {
+                word = newWord;
+                document.getElementById('currentValue').textContent = word;
+                document.getElementById('answer').textContent = "Updated value: " + word;
+            }
+        }
+
         document.getElementById('updateForm').addEventListener('submit', function(event) {
-            event.preventDefault();  // Предотвращаем перезагрузку страницы
-            var newWord = document.getElementById('newWord').value;
-            updateWord(newWord);  // Обновляем значение переменной
-            document.getElementById('newWord').value = '';  // Очищаем поле ввода
+            event.preventDefault();
+            const newWord = document.getElementById('newWord').value;
+            updateWord(newWord);
+            document.getElementById('newWord').value = '';
         });
+
+        // Fetch the initial word value when the page loads
+        fetchWord();
     </script>
 </body>
 </html>
