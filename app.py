@@ -17,22 +17,20 @@ words = {
 
 @app.route('/get_word', methods=['GET'])
 def get_word():
-    day_of_week = request.args.get('day_of_week', default='word1')
-    return jsonify({day_of_week: words[day_of_week]})
+    day_of_week = request.args.get('day_of_week')
+    word = words.get(day_of_week, "Not Found")
+    return jsonify({"word": word})
 
 @app.route('/update_word', methods=['POST'])
 def update_word():
     data = request.json
+    print("Received data:", data)  # Логирование полученных данных
     for key in data:
         if key in words:
-            words[key] = data[key].upper()
-    return jsonify({"status": "success", "words": words})
+            words[key] = data[key]
+    return jsonify({"message": "Words updated successfully!"})
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
 
 
