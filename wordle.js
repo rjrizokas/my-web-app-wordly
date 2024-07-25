@@ -12,6 +12,10 @@ let guessList = ["ааааа"]
 
 guessList = guessList.concat(wordList);
 
+const keyMapping = {
+    'KeyQ': 'Й', 'KeyW': 'Ц', 'KeyE': 'У', 'KeyR': 'К', 'KeyT': 'Е', 'KeyY': 'Н', 'KeyU': 'Г', 'KeyI': 'Ш', 'KeyO': 'Щ', 'KeyP': 'З', 'KeyA': 'Ф', 'KeyS': 'Ы', 'KeyD': 'В', 'KeyF': 'А', 'KeyG': 'П', 'KeyH': 'Р', 'KeyJ': 'О', 'KeyK': 'Л', 'KeyL': 'Д', 'KeyZ': 'Я', 'KeyX': 'Ч', 'KeyC': 'С', 'KeyV': 'М', 'KeyB': 'И', 'KeyN': 'Т', 'KeyM': 'Ь'
+};
+
 window.onload = function() {
     initialize();
     fetchWord(); // Fetch the word from the server on page load
@@ -92,11 +96,15 @@ function initialize() {
 
 function processKey() {
     let key = this.id;
+    let letter = this.innerText;
+
     if (key === "Enter" || key === "Backspace") {
         let event = { "code": key };
         processInput(event);
+    } else if (key.startsWith("Key")) {
+        let event = { "code": keyMapping[key] ? "Key" + keyMapping[key] : key };
+        processInput(event);
     } else {
-        let letter = this.innerText;
         let event = { "code": "Key" + letter };
         processInput(event);
     }
@@ -108,8 +116,8 @@ function processInput(e) {
     let keyCode = e.code;
     let letter = "";
 
-    if (keyCode.startsWith("Key")) {
-        letter = keyCode.slice(3);
+    if (keyMapping[keyCode]) {
+        letter = keyMapping[keyCode];
     } else if (keyCode === "Backspace") {
         if (col > 0) {
             col -= 1;
@@ -206,5 +214,6 @@ function update() {
     row += 1;
     col = 0;
 }
+
 
 
