@@ -9,17 +9,16 @@ body {
 }
 
 .container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Два равных столбца */
+    gap: 20px; /* Расстояние между столбцами */
     padding: 10px;
     max-width: 1200px; /* Максимальная ширина контейнера */
 }
 
 .column {
-    flex: 1;
-    margin: 10px;
-    max-width: 45%; /* Ограничение ширины колонок для больших экранов */
+    display: flex;
+    flex-direction: column;
 }
 
 form {
@@ -52,32 +51,7 @@ button:hover {
     background-color: #218838;
 }
 
-/* Mobile responsiveness */
-@media (max-width: 600px) {
-    .container {
-        flex-direction: column; /* Колонки становятся строками на маленьких экранах */
-        align-items: center; /* Центрирование колонок */
-    }
-
-    .column {
-        flex: 1 1 100%; /* Каждый столбец занимает 100% ширины на маленьких экранах */
-        margin: 0;
-        max-width: 100%; /* Убираем ограничение ширины для мобильных устройств */
-    }
-
-    button {
-        width: 90%;
-    }
-}
-
-/* Tablet responsiveness */
-@media (min-width: 601px) and (max-width: 900px) {
-    .container {
-        flex-direction: row; /* Два столбца на планшетах */
-    }
-
-    .column {
-        flex: 1;
-        max-width: 48%; /* Расстояние между колонками */
-    }
+/* Стили для кнопки */
+button#update-all {
+    grid-column: span 2; /* Кнопка занимает оба столбца */
 }
