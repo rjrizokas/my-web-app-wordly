@@ -1,64 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <title>Wordle</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="wordle.css">
     <script src="wordle.js" defer></script>
 </head>
-
 <body>
     <h1 id="title">Wordle</h1>
     <hr>
     <br>
     <div id="board"></div>
-
     <br>
     <h1 id="answer"></h1>
-
-    <h2>Current Value: <span id="currentValue"></span></h2>
-    <form id="updateForm">
-        <label for="newWord">Enter new value:</label>
-        <input type="text" id="newWord" name="newWord" required>
-        <button type="submit">Update</button>
-    </form>
-
-    <script>
-        let word = "";
-
-        async function fetchWord() {
-            const response = await fetch('/get_word');
-            const data = await response.json();
-            word = data.word;
-            document.getElementById('currentValue').textContent = word;
-        }
-
-        async function updateWord(newWord) {
-            const response = await fetch('/update_word', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ word: newWord }),
-            });
-            if (response.ok) {
-                word = newWord;
-                document.getElementById('currentValue').textContent = word;
-                document.getElementById('answer').textContent = "Updated value: " + word;
-            }
-        }
-
-        document.getElementById('updateForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const newWord = document.getElementById('newWord').value;
-            updateWord(newWord);
-            document.getElementById('newWord').value = '';
-        });
-
-        // Fetch the initial word value when the page loads
-        fetchWord();
-    </script>
+    <button id="updateWord">Update Word</button>
 </body>
 </html>
