@@ -13,13 +13,8 @@ let guessList = ["ааааа"];
 guessList = guessList.concat(wordList);
 
 window.onload = function() {
-    intialize();
+    initialize();
     fetchWord(); // Fetch the word from the server on page load
-
-    // Add event listener for the Update Word button
-    document.getElementById('updateWord').addEventListener('click', () => {
-        fetchWord(); // Fetch the word again when the button is clicked
-    });
 }
 
 async function fetchWord() {
@@ -33,7 +28,7 @@ async function fetchWord() {
     }
 }
 
-function intialize() {
+function initialize() {
     // Create the game board
     for (let r = 0; r < height; r++) {
         for (let c = 0; c < width; c++) {
@@ -59,26 +54,23 @@ function intialize() {
 
         for (let j = 0; j < currRow.length; j++) {
             let keyTile = document.createElement("div");
-
             let key = currRow[j];
             keyTile.innerText = key;
-            if (key == "Enter") {
+            if (key === "Enter") {
                 keyTile.id = "Enter";
-            } else if (key == "⌫") {
+            } else if (key === "⌫") {
                 keyTile.id = "Backspace";
-            } else {
+            } else if (key !== " ") {
                 keyTile.id = "Key" + key;
             }
 
             keyTile.addEventListener("click", processKey);
 
-            if (key == "Enter") {
-                keyTile.classList.add("enter-key-tile");
-            } else if (key == "⌫") {
-                keyTile.classList.add("backspace-key-tile");
-            } else {
-                keyTile.classList.add("key-tile");
-            }
+            keyTile.classList.add(
+                key === "Enter" ? "enter-key-tile" :
+                key === "⌫" ? "backspace-key-tile" :
+                "key-tile"
+            );
             keyboardRow.appendChild(keyTile);
         }
         document.body.appendChild(keyboardRow);
