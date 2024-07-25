@@ -20,7 +20,8 @@ words = {
 def get_word():
     # Вернем слово для текущего дня недели
     day_of_week = datetime.datetime.now().strftime('%A').lower()
-    return jsonify({"word": words.get(day_of_week, "SNAKE")})
+    word = words.get(day_of_week, "SNAKE")
+    return jsonify({"word": word}, ensure_ascii=False)  # Обновлено для возврата кириллицы
 
 @app.route('/update_word', methods=['POST'])
 def update_word():
@@ -28,7 +29,7 @@ def update_word():
     for key in data:
         if key in words:
             words[key] = data[key]
-    return jsonify({"message": "Words updated successfully!"})
+    return jsonify({"message": "Words updated successfully!"}, ensure_ascii=False)  # Обновлено для возврата кириллицы
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
