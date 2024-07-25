@@ -10,7 +10,7 @@ hr {
 }
 
 #title {
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bold;
     letter-spacing: 2px;
 }
@@ -82,8 +82,8 @@ hr {
 }
 
 .enter-key-tile {
-    width: 76px;
-    height: 40px;
+    width: 54px;
+    height: 30px;
     margin: 1px;
     border: 1px solid lightgray;
 
