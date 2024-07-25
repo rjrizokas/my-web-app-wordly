@@ -12,18 +12,14 @@ let guessList = ["ааааа"]
 
 guessList = guessList.concat(wordList);
 
-const keyMapping = {
-    'KeyQ': 'Й', 'KeyW': 'Ц', 'KeyE': 'У', 'KeyR': 'К', 'KeyT': 'Е', 'KeyY': 'Н', 'KeyU': 'Г', 'KeyI': 'Ш', 'KeyO': 'Щ', 'KeyP': 'З', 'KeyA': 'Ф', 'KeyS': 'Ы', 'KeyD': 'В', 'KeyF': 'А', 'KeyG': 'П', 'KeyH': 'Р', 'KeyJ': 'О', 'KeyK': 'Л', 'KeyL': 'Д', 'KeyZ': 'Я', 'KeyX': 'Ч', 'KeyC': 'С', 'KeyV': 'М', 'KeyB': 'И', 'KeyN': 'Т', 'KeyM': 'Ь'
-};
-
 window.onload = function() {
-    initialize();
+    intialize();
     fetchWord(); // Fetch the word from the server on page load
 
     // Add event listener for the Update Word button
-    document.getElementById('updateWord').addEventListener('click', () => {
-        fetchWord(); // Fetch the word again when the button is clicked
-    });
+    // document.getElementById('updateWord').addEventListener('click', () => {
+    //     fetchWord(); // Fetch the word again when the button is clicked
+    // });
 }
 
 async function fetchWord() {
@@ -37,7 +33,7 @@ async function fetchWord() {
     }
 }
 
-function initialize() {
+function intialize() {
     // Create the game board
     for (let r = 0; r < height; r++) {
         for (let c = 0; c < width; c++) {
@@ -66,20 +62,18 @@ function initialize() {
 
             let key = currRow[j];
             keyTile.innerText = key;
-            if (key === "Enter") {
+            if (key == "Enter") {
                 keyTile.id = "Enter";
-            } else if (key === "⌫") {
+            } else if (key == "⌫") {
                 keyTile.id = "Backspace";
-            } else {
+            } else if (key !== " ") {
                 keyTile.id = "Key" + key;
             }
 
             keyTile.addEventListener("click", processKey);
 
-            if (key === "Enter") {
+            if (key == "Enter") {
                 keyTile.classList.add("enter-key-tile");
-            } else if (key === "⌫") {
-                keyTile.classList.add("backspace-key-tile");
             } else {
                 keyTile.classList.add("key-tile");
             }
@@ -89,10 +83,16 @@ function initialize() {
     }
 
     // Listen for Key Press
-    document.addEventListener("keydown", (e) => {
+    document.addEventListener("keyup", (e) => {
         processInput(e);
     });
 }
+
+const keyMapping = {
+    'KeyQ': 'Й', 'KeyW': 'Ц', 'KeyE': 'У', 'KeyR': 'К', 'KeyT': 'Е', 'KeyY': 'Н', 'KeyU': 'Г', 'KeyI': 'Ш', 'KeyO': 'Щ', 'KeyP': 'З',
+    'KeyA': 'Ф', 'KeyS': 'Ы', 'KeyD': 'В', 'KeyF': 'А', 'KeyG': 'П', 'KeyH': 'Р', 'KeyJ': 'О', 'KeyK': 'Л', 'KeyL': 'Д',
+    'KeyZ': 'Я', 'KeyX': 'Ч', 'KeyC': 'С', 'KeyV': 'М', 'KeyB': 'И', 'KeyN': 'Т', 'KeyM': 'Ь'
+};
 
 function processKey() {
     let key = this.id;
@@ -102,7 +102,7 @@ function processKey() {
         let event = { "code": key };
         processInput(event);
     } else if (key.startsWith("Key")) {
-        let event = { "code": keyMapping[key] ? "Key" + keyMapping[key] : key };
+        let event = { "code": key };
         processInput(event);
     } else {
         let event = { "code": "Key" + letter };
@@ -180,13 +180,17 @@ function update() {
         let currTile = document.getElementById(row.toString() + '-' + c.toString());
         let letter = currTile.innerText;
 
-        if (word[c] === letter) {
+        if (word[c] == letter) {
             currTile.classList.add("correct");
             let keyTile = document.getElementById("Key" + letter);
             keyTile.classList.remove("present");
             keyTile.classList.add("correct");
             correct += 1;
             letterCount[letter] -= 1;
+        }
+
+        if (correct == width) {
+            gameOver = true;
         }
     }
 
@@ -214,6 +218,4 @@ function update() {
     row += 1;
     col = 0;
 }
-
-
 
