@@ -1,18 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Update Word</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="update.js" defer></script>
+    <title>Update Words</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Подключите ваш CSS файл -->
+    <script src="update.js" defer></script> <!-- Подключите ваш JS файл -->
 </head>
 <body>
-    <h1>Update the Word</h1>
-    <form id="updateForm">
-        <label for="wordInput">New Word:</label>
-        <input type="text" id="wordInput" name="word" required>
-        <button type="submit">Update Word</button>
+    <h1>Update Words for Each Day of the Week</h1>
+    <form id="update-form">
+        <label for="monday">Monday:</label>
+        <input type="text" id="monday" name="monday"><br>
+
+        <label for="tuesday">Tuesday:</label>
+        <input type="text" id="tuesday" name="tuesday"><br>
+
+        <label for="wednesday">Wednesday:</label>
+        <input type="text" id="wednesday" name="wednesday"><br>
+
+        <label for="thursday">Thursday:</label>
+        <input type="text" id="thursday" name="thursday"><br>
+
+        <label for="friday">Friday:</label>
+        <input type="text" id="friday" name="friday"><br>
+
+        <label for="saturday">Saturday:</label>
+        <input type="text" id="saturday" name="saturday"><br>
+
+        <label for="sunday">Sunday:</label>
+        <input type="text" id="sunday" name="sunday"><br>
+
+        <button type="button" onclick="updateWords()">Update Words</button>
     </form>
-    <p id="responseMessage"></p>
+    <div id="status"></div>
 </body>
 </html>
