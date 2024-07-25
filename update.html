@@ -16,7 +16,7 @@
             margin-bottom: 15px;
         }
         form {
-            max-width: 600px;
+            max-width: 400px;
             margin: 0 auto;
             padding: 20px;
             background: #fff;
@@ -59,8 +59,10 @@
     <script src="update.js" defer></script> <!-- Подключите ваш JS файл -->
 </head>
 <body>
-    <h1>Weekly</h1>
+    
     <form id="update-form">
+        <button type="button" onclick="updateWords()">Update Words</button>
+        
         <label for="monday">Monday:</label>
         <input type="text" id="monday" name="monday"><br>
 
@@ -82,7 +84,6 @@
         <label for="sunday">Sunday:</label>
         <input type="text" id="sunday" name="sunday"><br>
 
-        <button type="button" onclick="updateWords()">Update Words</button>
     </form>
     <div id="status"></div>
 </body>
