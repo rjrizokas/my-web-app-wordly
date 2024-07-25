@@ -35,7 +35,7 @@ def write_words_to_file(words):
 def get_word():
     words = read_words_from_file()
     day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
-    word = words.get(day_of_week, "ЛЕНТА")
+    word = words.get(day_of_week, "SNAKE")
     return jsonify({"word": word})
 
 @app.route('/update_word', methods=['POST'])
@@ -47,6 +47,15 @@ def update_word():
             words[key] = data[key]
     write_words_to_file(words)
     return jsonify({"message": "Words updated successfully!"})
+
+@app.route('/view_words', methods=['GET'])
+def view_words():
+    try:
+        with open(words_file_path, 'r', encoding='utf-8') as f:
+            words = json.load(f)
+        return jsonify(words)
+    except FileNotFoundError:
+        return jsonify({"error": "File not found"}), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
