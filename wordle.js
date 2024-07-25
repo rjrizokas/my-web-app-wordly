@@ -13,7 +13,7 @@ let guessList = ["ааааа"]
 guessList = guessList.concat(wordList);
 
 window.onload = function() {
-    intialize();
+    initialize();
     fetchWord(); // Fetch the word from the server on page load
 
     // Add event listener for the Update Word button
@@ -33,7 +33,7 @@ async function fetchWord() {
     }
 }
 
-function intialize() {
+function initialize() {
     // Create the game board
     for (let r = 0; r < height; r++) {
         for (let c = 0; c < width; c++) {
@@ -62,9 +62,9 @@ function intialize() {
 
             let key = currRow[j];
             keyTile.innerText = key;
-            if (key == "Enter") {
+            if (key === "Enter") {
                 keyTile.id = "Enter";
-            } else if (key == "⌫") {
+            } else if (key === "⌫") {
                 keyTile.id = "Backspace";
             } else {
                 keyTile.id = "Key" + key;
@@ -72,9 +72,9 @@ function intialize() {
 
             keyTile.addEventListener("click", processKey);
 
-            if (key == "Enter") {
+            if (key === "Enter") {
                 keyTile.classList.add("enter-key-tile");
-            } else if (key == "⌫") {
+            } else if (key === "⌫") {
                 keyTile.classList.add("backspace-key-tile");
             } else {
                 keyTile.classList.add("key-tile");
@@ -111,13 +111,14 @@ function processInput(e) {
     if (keyCode.startsWith("Key")) {
         letter = keyCode.slice(3);
     } else if (keyCode === "Backspace") {
-        if (0 < col && col <= width) {
+        if (col > 0) {
             col -= 1;
         }
         let currTile = document.getElementById(row.toString() + '-' + col.toString());
         currTile.innerText = "";
     } else if (keyCode === "Enter") {
         update();
+        return; // Skip further processing if Enter is pressed
     }
 
     if (letter && col < width) {
@@ -178,10 +179,6 @@ function update() {
             keyTile.classList.add("correct");
             correct += 1;
             letterCount[letter] -= 1;
-        }
-
-        if (correct === width) {
-            gameOver = true;
         }
     }
 
