@@ -24,7 +24,7 @@ if(today.getDay() == 2 ) var word = "FRAME";
 if(today.getDay() == 3 ) var word = "MAKER";
 if(today.getDay() == 4 ) var word = "SQUID";
 if(today.getDay() == 5 ) var word = "BLADE";
-if(today.getDay() == 6 ) var word = "WORLD";
+if(today.getDay() == 6 ) var word = "BLINK";
 
 window.onload = function(){
     intialize();
