@@ -1,24 +1,29 @@
-document.getElementById('updateForm').addEventListener('submit', async (event) => {
-    event.preventDefault(); // Предотвращаем стандартное действие формы
+async function updateWords() {
+    const statusDiv = document.getElementById('status');
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    let updatePromises = [];
 
-    const wordInput = document.getElementById('wordInput').value;
-    
-    try {
-        const response = await fetch('https://my-web-app-wordly.onrender.com/update_word', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ word: wordInput }),
-        });
-
-        if (response.ok) {
-            document.getElementById('responseMessage').innerText = 'Word updated successfully!';
-        } else {
-            document.getElementById('responseMessage').innerText = 'Failed to update word.';
+    days.forEach(day => {
+        const wordInput = document.getElementById(day);
+        const word = wordInput.value.trim();
+        if (word) {
+            updatePromises.push(
+                fetch('https://your-flask-app-url/update_word', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ day: day, word: word })
+                }).then(response => response.json())
+            );
         }
+    });
+
+    try {
+        const results = await Promise.all(updatePromises);
+        statusDiv.innerHTML = 'Words updated successfully!';
     } catch (error) {
+        statusDiv.innerHTML = 'Error updating words.';
         console.error('Error:', error);
-        document.getElementById('responseMessage').innerText = 'Error updating word.';
     }
-});
+}
