@@ -111,21 +111,26 @@ function processKey() {
 
 
 function processInput(e) {
+    console.log(`Processing input: ${e.code}`);
+
     if (gameOver) return;
 
     let keyCode = e.code;
     let letter = "";
 
-    if (keyCode.startsWith("Key")) {
-        letter = keyCode.slice(3);
+    // Получаем букву по коду клавиши
+    if (keyCode.startsWith("Key") && keyMapping[keyCode]) {
+        letter = keyMapping[keyCode];
     } else if (keyCode === "Backspace") {
-        if (0 < col && col <= width) {
+        if (col > 0) {
             col -= 1;
         }
         let currTile = document.getElementById(row.toString() + '-' + col.toString());
         currTile.innerText = "";
+        return;
     } else if (keyCode === "Enter") {
         update();
+        return;
     }
 
     if (letter && col < width) {
