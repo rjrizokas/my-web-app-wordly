@@ -1,12 +1,15 @@
+/* Основные стили для страницы update.html */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Выравнивание элементов по верхнему краю */
     height: 100vh;
     background-color: #f4f4f4;
+    box-sizing: border-box;
+    padding-bottom: 50px; /* Создаем пространство снизу */
 }
 
 .container {
@@ -16,10 +19,11 @@ body {
     background: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    margin-top: 20px; /* Добавляем верхний отступ для улучшения видимости на мобильных устройствах */
 }
 
 .form-group {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .form-group label {
@@ -38,7 +42,7 @@ body {
 
 .btn {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 12px 20px;
     font-size: 14px; /* Уменьшаем размер шрифта */
     color: #fff;
     background-color: #28a745;
@@ -46,7 +50,8 @@ body {
     border-radius: 4px;
     cursor: pointer;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 20px;
+    width: 100%; /* Кнопка на всю ширину контейнера */
 }
 
 .btn:hover {
@@ -54,7 +59,7 @@ body {
 }
 
 #status {
-    margin-top: 10px;
+    margin-top: 20px;
     font-size: 14px; /* Уменьшаем размер шрифта */
     color: #d9534f;
 }
