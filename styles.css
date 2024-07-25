@@ -9,7 +9,7 @@ body {
     height: 100vh;
     background-color: #f4f4f4;
     box-sizing: border-box;
-    padding-bottom: 50px; /* Создаем пространство снизу */
+    padding-bottom: 300px; /* Создаем пространство снизу */
 }
 
 .container {
@@ -20,6 +20,7 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     margin-top: 20px; /* Добавляем верхний отступ для улучшения видимости на мобильных устройствах */
+    box-sizing: border-box;
 }
 
 .btn {
@@ -62,4 +63,9 @@ body {
     margin-top: 20px;
     font-size: 14px; /* Уменьшаем размер шрифта */
     color: #d9534f;
+}
+
+/* Дополнительный блок для создания пустого пространства внизу */
+#spacer {
+    height: 300px; /* Должно быть равно высоте вашей формы */
 }
