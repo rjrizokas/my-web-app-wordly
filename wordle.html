@@ -1,19 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Wordle</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle</title>
     <link rel="stylesheet" href="wordle.css">
-    <script src="wordle.js" defer></script>
 </head>
 <body>
-    <h1 id="title">Wordle</h1>
-    <hr>
-    <br>
-    <div id="board"></div>
-    <br>
-    <h1 id="answer"></h1>
-    <!-- <button id="updateWord">Update Word</button> -->
+    <h1>Wordle</h1>
+    <select id="memberSelect">
+        <option value="roman">Роман</option>
+        <option value="viorica">Виорика</option>
+        <option value="artem">Артем</option>
+        <option value="irina">Ирина</option>
+        <option value="elena">Елена</option>
+    </select>
+    <div id="game">
+        <!-- Вставьте код игры здесь -->
+    </div>
+    <div id="buttons">
+        <button onclick="fetchWord()">Получить слово</button>
+    </div>
+    <script src="wordle.js"></script>
 </body>
 </html>
