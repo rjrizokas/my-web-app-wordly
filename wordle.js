@@ -24,7 +24,7 @@ window.onload = function() {
 
 async function fetchWord() {
     try {
-        const response = await fetch('http://localhost:5000/get_word');
+        const response = await fetch('https://my-web-app-wordly.onrender.com/get_word');
         const data = await response.json();
         word = data.word.toUpperCase();
         console.log("Current word: ", word);
