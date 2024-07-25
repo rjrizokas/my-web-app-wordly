@@ -48,7 +48,7 @@ function intialize() {
     // Create the keyboard
     let keyboard = [
         ["Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ"],
-        ["Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э"],
+        ["Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", " "],
         ["Enter", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", "⌫"]
     ];
 
@@ -85,7 +85,7 @@ function intialize() {
     }
 
     // Listen for Key Press
-    document.addEventListener("keyup", (e) => {
+    document.addEventListener("keydown", (e) => {
         processInput(e);
     });
 }
@@ -209,4 +209,5 @@ function update() {
     row += 1;
     col = 0;
 }
+
 
