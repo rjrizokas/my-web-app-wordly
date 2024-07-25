@@ -17,7 +17,6 @@ def read_words_from_file():
             return json.load(f)
     except FileNotFoundError:
         return {
-
             "monday": "ПЕСНЯ",
             "tuesday": "КОСТЬ",
             "wednesday": "СФЕРА",
@@ -25,7 +24,7 @@ def read_words_from_file():
             "friday": "УГОРЬ",
             "saturday": "БРОНЬ",
             "sunday": "МЕСТО"
-       }
+        }
 
 # Функция для записи слов в файл
 def write_words_to_file(words):
@@ -36,7 +35,7 @@ def write_words_to_file(words):
 def get_word():
     words = read_words_from_file()
     day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
-    word = words.get(day_of_week, "SNAKE")
+    word = words.get(day_of_week, "ЛЕНТА")
     return jsonify({"word": word})
 
 @app.route('/update_word', methods=['POST'])
@@ -51,3 +50,4 @@ def update_word():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
