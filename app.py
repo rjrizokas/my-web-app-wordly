@@ -35,6 +35,7 @@ def update_word():
             words[key] = data[key]
     return jsonify({"message": "Words updated successfully!"})
 
+
 if __name__ == '__main__':
     app.run(debug=True)
 
