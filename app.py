@@ -7,8 +7,9 @@ import datetime
 app = Flask(__name__)
 CORS(app)
 
-# Путь к файлу words.json
-words_file_path = os.path.join(os.path.dirname(__file__), 'words.json')
+# Путь к файлу words.json в постоянном хранилище
+persistent_dir = '/persistent'
+words_file_path = os.path.join(persistent_dir, 'words.json')
 
 # Функция для чтения слов из файла
 def read_words_from_file():
@@ -28,6 +29,8 @@ def read_words_from_file():
 
 # Функция для записи слов в файл
 def write_words_to_file(words):
+    if not os.path.exists(persistent_dir):
+        os.makedirs(persistent_dir)
     with open(words_file_path, 'w', encoding='utf-8') as f:
         json.dump(words, f, ensure_ascii=False, indent=4)
 
