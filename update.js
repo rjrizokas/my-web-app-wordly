@@ -1,35 +1,25 @@
-async function updateWords() {
-    const statusDiv = document.getElementById('status');
-    statusDiv.innerText = ''; // Clear previous status
-
-    // Собираем данные формы
+async function updateAllWords() {
     const words = {
-        monday: document.getElementById('monday').value,
-        tuesday: document.getElementById('tuesday').value,
-        wednesday: document.getElementById('wednesday').value,
-        thursday: document.getElementById('thursday').value,
-        friday: document.getElementById('friday').value,
-        saturday: document.getElementById('saturday').value,
-        sunday: document.getElementById('sunday').value
+        word1: document.getElementById('word1').value,
+        word2: document.getElementById('word2').value,
+        word3: document.getElementById('word3').value,
+        word4: document.getElementById('word4').value,
+        word5: document.getElementById('word5').value,
+        word6: document.getElementById('word6').value,
+        word7: document.getElementById('word7').value
     };
 
-    try {
-        // Отправляем запрос на сервер
-        const response = await fetch('https://my-web-app-wordly.onrender.com/update_words', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(words)
-        });
+    const response = await fetch('https://my-web-app-wordly.onrender.com/update_word', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(words)
+    });
 
-        if (response.ok) {
-            statusDiv.innerText = 'Words updated successfully!';
-        } else {
-            statusDiv.innerText = 'Error updating words. Please try again.';
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        statusDiv.innerText = 'Error updating words. Please try again.';
+    if (response.ok) {
+        alert('Слова успешно обновлены!');
+    } else {
+        alert('Ошибка обновления слов.');
     }
 }
