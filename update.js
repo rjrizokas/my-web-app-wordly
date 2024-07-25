@@ -8,7 +8,7 @@ async function updateWords() {
         const word = wordInput.value.trim();
         if (word) {
             updatePromises.push(
-                fetch('https://your-flask-app-url/update_word', {
+                fetch('https://my-web-app-wordly.onrender.com/update_word', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
