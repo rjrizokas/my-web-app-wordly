@@ -1,19 +1,23 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import datetime
 import json
 import os
+import datetime
 
 app = Flask(__name__)
 CORS(app)
 
 # Путь к файлу words.json
-WORDS_FILE = 'words.json'
+words_file_path = os.path.join(os.path.dirname(__file__), 'words.json')
 
 # Функция для чтения слов из файла
-def read_words():
-    if not os.path.exists(WORDS_FILE):
+def read_words_from_file():
+    try:
+        with open(words_file_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
         return {
+
             "monday": "ПЕСНЯ",
             "tuesday": "КОСТЬ",
             "wednesday": "СФЕРА",
@@ -21,30 +25,28 @@ def read_words():
             "friday": "УГОРЬ",
             "saturday": "БРОНЬ",
             "sunday": "МЕСТО"
-        }
-    with open(WORDS_FILE, 'r', encoding='utf-8') as file:
-        return json.load(file)
+       }
 
 # Функция для записи слов в файл
-def write_words(words):
-    with open(WORDS_FILE, 'w', encoding='utf-8') as file:
-        json.dump(words, file, ensure_ascii=False, indent=4)
+def write_words_to_file(words):
+    with open(words_file_path, 'w', encoding='utf-8') as f:
+        json.dump(words, f, ensure_ascii=False, indent=4)
 
 @app.route('/get_word', methods=['GET'])
 def get_word():
-    words = read_words()
+    words = read_words_from_file()
     day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
-    word = words.get(day_of_week, "ГОНКА")
+    word = words.get(day_of_week, "SNAKE")
     return jsonify({"word": word})
 
 @app.route('/update_word', methods=['POST'])
 def update_word():
     data = request.json
-    words = read_words()
+    words = read_words_from_file()
     for key in data:
         if key in words:
             words[key] = data[key]
-    write_words(words)
+    write_words_to_file(words)
     return jsonify({"message": "Words updated successfully!"})
 
 if __name__ == '__main__':
