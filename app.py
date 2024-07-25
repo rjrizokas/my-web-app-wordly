@@ -2,66 +2,94 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 import os
-import datetime
 
 app = Flask(__name__)
 CORS(app)
 
-# Путь к файлу words.json на постоянном диске
-persistent_dir = '/opt/render/project/src/data'
-words_file_path = os.path.join(persistent_dir, 'words.json')
+WORDS_FILE_PATH = '/opt/render/project/src/words.json'
 
-# Функция для чтения слов из файла
-def read_words_from_file():
-    try:
-        with open(words_file_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        # Если файл не найден, создаем его с дефолтными значениями
-        words = {
-            "monday": "СТЕНА",
-            "tuesday": "СТЕНА",
-            "wednesday": "СТЕНА",
-            "thursday": "СТЕНА",
-            "friday": "СТЕНА",
-            "saturday": "СТЕНА",
-            "sunday": "СТЕНА"
+def initialize_words():
+    # Начальные значения слов на русском языке
+    initial_words = {
+        "roman": {
+            "monday": "МАЛИНА",
+            "tuesday": "КОШКА",
+            "wednesday": "КОШКА",
+            "thursday": "ГРУША",
+            "friday": "КОШКА",
+            "saturday": "КОШКА",
+            "sunday": "КОШКА"
+        },
+        "viorica": {
+            "monday": "КНИГА",
+            "tuesday": "КНИГА",
+            "wednesday": "НОСОК",
+            "thursday": "КНИГА",
+            "friday": "КНИГА",
+            "saturday": "КНИГА",
+            "sunday": "КНИГА"
+        },
+        "artem": {
+            "monday": "САПОГ",
+            "tuesday": "САПОГ",
+            "wednesday": "САПОГ",
+            "thursday": "САПОГ",
+            "friday": "САПОГ",
+            "saturday": "САПОГ",
+            "sunday": "САПОГ"
+        },
+        "irina": {
+            "monday": "БЕДРО",
+            "tuesday": "БЕДРО",
+            "wednesday": "БЕДРО",
+            "thursday": "БЕДРО",
+            "friday": "БЕДРО",
+            "saturday": "БЕДРО",
+            "sunday": "БЕДРО"
+        },
+        "elena": {
+            "monday": "КНИГА",
+            "tuesday": "КНИГА",
+            "wednesday": "КНИГА",
+            "thursday": "САХАР",
+            "friday": "КНИГА",
+            "saturday": "ЛАМПА",
+            "sunday": "КНИГА"
         }
-        write_words_to_file(words)
-        return words
+    }
+    with open(WORDS_FILE_PATH, 'w', encoding='utf-8') as f:
+        json.dump(initial_words, f, indent=4, ensure_ascii=False)
 
-# Функция для записи слов в файл
-def write_words_to_file(words):
-    if not os.path.exists(persistent_dir):
-        os.makedirs(persistent_dir)
-    with open(words_file_path, 'w', encoding='utf-8') as f:
-        json.dump(words, f, ensure_ascii=False, indent=4)
+def load_words():
+    if not os.path.exists(WORDS_FILE_PATH):
+        initialize_words()
+    with open(WORDS_FILE_PATH, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+def save_words(words):
+    with open(WORDS_FILE_PATH, 'w', encoding='utf-8') as f:
+        json.dump(words, f, indent=4, ensure_ascii=False)
+
+words = load_words()
 
 @app.route('/get_word', methods=['GET'])
 def get_word():
-    words = read_words_from_file()
-    day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
-    word = words.get(day_of_week, "ВЕСНА")
+    member = request.args.get('member', 'roman')
+    day_of_week = request.args.get('day_of_week', 'monday')
+    member_words = words.get(member, {})
+    word = member_words.get(day_of_week, "СЛОВО")
     return jsonify({"word": word})
 
 @app.route('/update_word', methods=['POST'])
 def update_word():
     data = request.json
-    words = read_words_from_file()
-    for key in data:
-        if key in words:
-            words[key] = data[key]
-    write_words_to_file(words)
+    for member, member_words in data.items():
+        if member in words:
+            words[member].update(member_words)
+        else:
+            words[member] = member_words
+    save_words(words)
     return jsonify({"message": "Words updated successfully!"})
-
-@app.route('/view_words', methods=['GET'])
-def view_words():
-    try:
-        with open(words_file_path, 'r', encoding='utf-8') as f:
-            words = json.load(f)
-        return jsonify(words)
-    except FileNotFoundError:
-        return jsonify({"error": "File not found"}), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
