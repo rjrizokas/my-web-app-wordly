@@ -109,30 +109,25 @@ function processKey() {
     }
 }
 
-function processInput(e) {
-    console.log(`Processing input: ${e.code}`);
 
+function processInput(e) {
     if (gameOver) return;
 
     let keyCode = e.code;
     let letter = "";
 
-    // Получаем букву по коду клавиши
-    if (keyCode.startsWith("Key") && keyMapping[keyCode]) {
-        letter = keyMapping[keyCode];
+    if (keyCode.startsWith("Key")) {
+        letter = keyCode.slice(3);
     } else if (keyCode === "Backspace") {
-        if (col > 0) {
+        if (0 < col && col <= width) {
             col -= 1;
         }
         let currTile = document.getElementById(row.toString() + '-' + col.toString());
         currTile.innerText = "";
-        return;
     } else if (keyCode === "Enter") {
         update();
-        return;
     }
 
-    // Обработка ввода буквы
     if (letter && col < width) {
         let currTile = document.getElementById(row.toString() + '-' + col.toString());
         if (currTile.innerText === "") {
@@ -146,6 +141,7 @@ function processInput(e) {
         document.getElementById("answer").innerText = word;
     }
 }
+
 
 function update() {
     let guess = "";
