@@ -48,10 +48,9 @@ function intialize() {
     // Create the keyboard
     let keyboard = [
         ["Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ"],
-        ["Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", " "],
+        ["Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э"],
         ["Enter", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", "⌫"]
     ];
-
 
     for (let i = 0; i < keyboard.length; i++) {
         let currRow = keyboard[i];
@@ -67,7 +66,7 @@ function intialize() {
                 keyTile.id = "Enter";
             } else if (key == "⌫") {
                 keyTile.id = "Backspace";
-            } else if ("A" <= key && key <= "Z") {
+            } else {
                 keyTile.id = "Key" + key;
             }
 
@@ -75,6 +74,8 @@ function intialize() {
 
             if (key == "Enter") {
                 keyTile.classList.add("enter-key-tile");
+            } else if (key == "⌫") {
+                keyTile.classList.add("backspace-key-tile");
             } else {
                 keyTile.classList.add("key-tile");
             }
@@ -90,32 +91,44 @@ function intialize() {
 }
 
 function processKey() {
-    e = { "code": this.id };
-    processInput(e);
+    let key = this.id;
+    if (key === "Enter" || key === "Backspace") {
+        let event = { "code": key };
+        processInput(event);
+    } else {
+        let letter = this.innerText;
+        let event = { "code": "Key" + letter };
+        processInput(event);
+    }
 }
 
 function processInput(e) {
     if (gameOver) return;
 
-    if ("KeyA" <= e.code && e.code <= "KeyZ") {
-        if (col < width) {
-            let currTile = document.getElementById(row.toString() + '-' + col.toString());
-            if (currTile.innerText == "") {
-                currTile.innerText = e.code[3];
-                col += 1;
-            }
-        }
-    } else if (e.code == "Backspace") {
+    let keyCode = e.code;
+    let letter = "";
+
+    if (keyCode.startsWith("Key")) {
+        letter = keyCode.slice(3);
+    } else if (keyCode === "Backspace") {
         if (0 < col && col <= width) {
             col -= 1;
         }
         let currTile = document.getElementById(row.toString() + '-' + col.toString());
         currTile.innerText = "";
-    } else if (e.code == "Enter") {
+    } else if (keyCode === "Enter") {
         update();
     }
 
-    if (!gameOver && row == height) {
+    if (letter && col < width) {
+        let currTile = document.getElementById(row.toString() + '-' + col.toString());
+        if (currTile.innerText === "") {
+            currTile.innerText = letter;
+            col += 1;
+        }
+    }
+
+    if (!gameOver && row === height) {
         gameOver = true;
         document.getElementById("answer").innerText = word;
     }
@@ -158,7 +171,7 @@ function update() {
         let currTile = document.getElementById(row.toString() + '-' + c.toString());
         let letter = currTile.innerText;
 
-        if (word[c] == letter) {
+        if (word[c] === letter) {
             currTile.classList.add("correct");
             let keyTile = document.getElementById("Key" + letter);
             keyTile.classList.remove("present");
@@ -167,7 +180,7 @@ function update() {
             letterCount[letter] -= 1;
         }
 
-        if (correct == width) {
+        if (correct === width) {
             gameOver = true;
         }
     }
