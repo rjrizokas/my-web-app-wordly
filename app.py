@@ -2,34 +2,35 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # Разрешить запросы с любого источника
+CORS(app)
 
-current_word = "WHALE"
+# Словарь для хранения слов для каждого дня недели
+words = {
+    "monday": "word1",
+    "tuesday": "word2",
+    "wednesday": "word3",
+    "thursday": "word4",
+    "friday": "word5",
+    "saturday": "word6",
+    "sunday": "word7"
+}
 
 @app.route('/get_word', methods=['GET'])
 def get_word():
-    global current_word
-    return jsonify({"word": current_word})
+    day = request.args.get('day', 'monday').lower()
+    word = words.get(day, "default")
+    return jsonify({'word': word})
 
 @app.route('/update_word', methods=['POST'])
 def update_word():
-    global current_word
-    data = request.get_json()
-    if 'word' in data:
-        current_word = data['word'].upper()
-        return jsonify({"status": "success"}), 200
-    return jsonify({"status": "error", "message": "No word provided"}), 400
-
-@app.route('/update_word', methods=['POST'])
-def update_word():
-    try:
-        data = request.get_json()
-        word = data.get('word', 'DEFAULT_WORD')
-        with open('word.txt', 'w') as file:
-            file.write(word)
-        return jsonify({'status': 'success', 'word': word})
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+    data = request.json
+    day = data.get('day', 'monday').lower()
+    new_word = data.get('word', '')
+    if day in words:
+        words[day] = new_word
+        return jsonify({'status': 'success', 'word': new_word})
+    else:
+        return jsonify({'status': 'error', 'message': 'Invalid day'}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
