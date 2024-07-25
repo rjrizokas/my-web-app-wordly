@@ -4,7 +4,7 @@ document.getElementById('updateForm').addEventListener('submit', async (event) =
     const wordInput = document.getElementById('wordInput').value;
     
     try {
-        const response = await fetch('http://localhost:5000/update_word', {
+        const response = await fetch('https://my-web-app-wordly.onrender.com/update_word', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
