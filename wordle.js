@@ -88,18 +88,25 @@ function processKey() {
     let key = this.id;
     let letter = this.innerText;
 
-    let event = { "code": key === "Enter" ? "Enter" : key === "Backspace" ? "Backspace" : "Key" + letter };
+    console.log(`Virtual key pressed: ${key}, Letter: ${letter}`);
+
+    let event = {
+        "code": key === "Enter" ? "Enter" : key === "Backspace" ? "Backspace" : "Key" + letter
+    };
 
     processInput(event);
 }
 
 function processInput(e) {
+    console.log(`Processing input: ${e.code}`);
+
     if (gameOver) return;
 
     let keyCode = e.code;
     let letter = "";
 
-    if (keyMapping[keyCode]) {
+    // Получаем букву по коду клавиши
+    if (keyCode.startsWith("Key") && keyMapping[keyCode]) {
         letter = keyMapping[keyCode];
     } else if (keyCode === "Backspace") {
         if (col > 0) {
@@ -109,9 +116,10 @@ function processInput(e) {
         currTile.innerText = "";
     } else if (keyCode === "Enter") {
         update();
-        return; // Skip further processing if Enter is pressed
+        return;
     }
 
+    // Обработка ввода буквы
     if (letter && col < width) {
         let currTile = document.getElementById(row.toString() + '-' + col.toString());
         if (currTile.innerText === "") {
@@ -125,6 +133,8 @@ function processInput(e) {
         document.getElementById("answer").innerText = word;
     }
 }
+
+
 
 function update() {
     let guess = "";
