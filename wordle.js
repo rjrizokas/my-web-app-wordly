@@ -16,7 +16,7 @@ guessList = guessList.concat(wordList);
 var word = wordList[Math.floor(Math.random()*wordList.length)].toUpperCase();
 console.log(word);
 
-var word = "WORLD";
+var word = "WHALE";
 var today = new Date();
 if(today.getDay() == 0 ) var word = "SWEET";
 if(today.getDay() == 1 ) var word = "GLOVE";
