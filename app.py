@@ -7,13 +7,13 @@ CORS(app)
 
 # Переменные для хранения слов
 words = {
-    "monday": "WORLD",
-    "tuesday": "PLANE",
-    "wednesday": "STAKE",
-    "thursday": "BROWN",
-    "friday": "SWEET",
-    "saturday": "BLIND",
-    "sunday": "STONE"
+    "monday": "СТЕНА",
+    "tuesday": "ПОТОП",
+    "wednesday": "КАРТА",
+    "thursday": "ПЛЕЧО",
+    "friday": "ВЕСНА",
+    "saturday": "БОЧКА",
+    "sunday": "МЕСТО"
 }
 
 @app.route('/get_word', methods=['GET'])
