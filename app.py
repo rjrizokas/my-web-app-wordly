@@ -1,5 +1,7 @@
 import os
 import json
+import base64
+import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import datetime
@@ -83,6 +85,10 @@ def get_word():
     day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
     word = words.get(day_of_week, "СЛОВО")
     return jsonify({"word": word})
+
+@app.route('/get_wordlist', methods=['GET'])
+def get_wordlist():
+    return jsonify({"wordlist": wordlist})
 
 @app.route('/update_word', methods=['POST'])
 def update_word():
