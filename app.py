@@ -93,11 +93,14 @@ def get_wordlist():
 @app.route('/update_word', methods=['POST'])
 def update_word():
     data = request.json
+    print("Received data for update:", data)
+    
     for key, value in data.items():
         if key in words:
             if value in wordlist:
                 words[key] = value
             else:
+                print(f"Word '{value}' is not in the allowed word list.")
                 return jsonify({"message": f"Error: word '{value}' is not in the allowed word list."}), 400
 
     file_content = json.dumps(words, ensure_ascii=False)
@@ -109,4 +112,4 @@ def update_word():
         return jsonify({"message": "Error updating words!"}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
