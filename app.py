@@ -2,7 +2,7 @@ import os
 import requests
 import base64
 import json
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import datetime
 
@@ -18,6 +18,8 @@ REPO_NAME = 'my-web-app-wordly'
 WORDS_FILE_PATH = 'words.json'
 WORDS1_FILE_PATH = 'words1.json'
 WORDLIST_FILE_PATH = 'wordlist.json'
+DAILY_USER_DATA_FILE_PATH = 'daily_user_data.json'
+DAILY_USER_DATA1_FILE_PATH = 'daily_user_data1.json'
 
 def get_github_file_content(file_path):
     url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{file_path}'
@@ -79,6 +81,20 @@ except Exception as e:
     print(f"Failed to fetch words or wordlist: {e}")
     words1 = {}
 
+def get_daily_user_data(file_path):
+    try:
+        return get_github_file_content(file_path)
+    except Exception as e:
+        print(f"Failed to fetch daily user data: {e}")
+        return {}
+
+def update_daily_user_data(file_path, data):
+    try:
+        file_content = json.dumps(data, ensure_ascii=False)
+        update_github_file_content(file_path, file_content)
+    except Exception as e:
+        print(f"Failed to update daily user data: {e}")
+
 @app.route('/get_word', methods=['GET'])
 def get_word():
     day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
@@ -122,6 +138,49 @@ def update_word1():
     except Exception as e:
         print(f"Failed to update words: {e}")
         return jsonify({"message": "Error updating words!"}), 500
-        
+
+@app.route('/get_daily_user_data', methods=['GET'])
+def get_daily_user_data_route():
+    user_id = request.args.get('user_id')
+    file_path = request.args.get('file', DAILY_USER_DATA_FILE_PATH)
+    if not user_id:
+        return jsonify({"error": "User ID is required"}), 400
+    data = get_daily_user_data(file_path).get(user_id, {})
+    return jsonify(data)
+
+@app.route('/reset_daily_user_data', methods=['POST'])
+def reset_daily_user_data_route():
+    user_id = request.json.get('user_id')
+    file_path = request.json.get('file', DAILY_USER_DATA_FILE_PATH)
+    if not user_id:
+        return jsonify({"error": "User ID is required"}), 400
+
+    today = datetime.datetime.now().strftime('%Y-%m-%d')
+    user_data = get_daily_user_data(file_path)
+    user_data[user_id] = {
+        "guessList": [],
+        "currentRow": 0,
+        "currentCol": 0,
+        "last_reset_date": today
+    }
+
+    update_daily_user_data(file_path, user_data)
+    return jsonify({"message": "User data reset successfully!"})
+
+@app.route('/update_daily_user_data', methods=['POST'])
+def update_daily_user_data_route():
+    user_id = request.json.get('user_id')
+    file_path = request.json.get('file', DAILY_USER_DATA_FILE_PATH)
+    if not user_id:
+        return jsonify({"error": "User ID is required"}), 400
+
+    data = request.json.get('data', {})
+    user_data = get_daily_user_data(file_path)
+    if user_id not in user_data:
+        user_data[user_id] = {}
+    user_data[user_id].update(data)
+    update_daily_user_data(file_path, user_data)
+    return jsonify({"message": "User data updated successfully!"})
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))  # Запускаем на порту 5000
