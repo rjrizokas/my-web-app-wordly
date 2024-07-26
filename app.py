@@ -1,6 +1,4 @@
 import os
-import requests
-import base64
 import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -15,10 +13,11 @@ if not GITHUB_TOKEN:
 
 REPO_OWNER = 'rjrizokas'
 REPO_NAME = 'my-web-app-wordly'
-FILE_PATH = 'words.json'
+WORDS_FILE_PATH = 'words.json'
+WORDLIST_FILE_PATH = 'wordlist.json'
 
-def get_github_file_content():
-    url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}'
+def get_github_file_content(file_path):
+    url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{file_path}'
     headers = {
         'Authorization': f'token {GITHUB_TOKEN}',
         'Accept': 'application/vnd.github.v3+json'
@@ -33,8 +32,8 @@ def get_github_file_content():
         print("Error fetching file:", response.status_code, response.json())
         response.raise_for_status()
 
-def update_github_file_content(file_content):
-    url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}'
+def update_github_file_content(file_path, file_content):
+    url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{file_path}'
     headers = {
         'Authorization': f'token {GITHUB_TOKEN}',
         'Accept': 'application/vnd.github.v3+json'
@@ -50,7 +49,7 @@ def update_github_file_content(file_content):
         response.raise_for_status()
 
     data = {
-        'message': 'Update words.json',
+        'message': f'Update {file_path}',
         'content': file_content_base64,
         'sha': sha,  # SHA текущей версии файла
         'branch': 'main'
@@ -63,11 +62,21 @@ def update_github_file_content(file_content):
         print("Error updating file:", response.status_code, response.json())
         response.raise_for_status()
 
+def load_local_wordlist():
+    try:
+        with open(WORDLIST_FILE_PATH, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Failed to load wordlist from {WORDLIST_FILE_PATH}: {e}")
+        return []
+
 try:
-    words = get_github_file_content()
+    words = get_github_file_content(WORDS_FILE_PATH)
+    wordlist = load_local_wordlist()
 except Exception as e:
-    print(f"Failed to fetch words: {e}")
+    print(f"Failed to fetch words or wordlist: {e}")
     words = {}
+    wordlist = []
 
 @app.route('/get_word', methods=['GET'])
 def get_word():
@@ -78,12 +87,16 @@ def get_word():
 @app.route('/update_word', methods=['POST'])
 def update_word():
     data = request.json
-    for key in data:
+    for key, value in data.items():
         if key in words:
-            words[key] = data[key]
+            if value in wordlist:
+                words[key] = value
+            else:
+                return jsonify({"message": f"Error: word '{value}' is not in the allowed word list."}), 400
+
     file_content = json.dumps(words, ensure_ascii=False)
     try:
-        update_github_file_content(file_content)
+        update_github_file_content(WORDS_FILE_PATH, file_content)
         return jsonify({"message": "Words updated successfully!"})
     except Exception as e:
         print(f"Failed to update words: {e}")
