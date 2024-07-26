@@ -13,6 +13,7 @@ let guessList = ["ааааа"];
 guessList = guessList.concat(wordList);
 
 window.onload = function() {
+    console.log("Page loaded, initializing game...");
     initialize();
     fetchWord(); // Fetch the word from the server on page load
     loadProgress(); // Load user progress on page load
@@ -25,6 +26,7 @@ window.onload = function() {
 
 async function fetchWord() {
     try {
+        console.log("Fetching word from server...");
         const response = await fetch('https://my-web-app-wordly.onrender.com/get_word');
         const data = await response.json();
         word = data.word.toUpperCase();
@@ -35,6 +37,7 @@ async function fetchWord() {
 }
 
 function initialize() {
+    console.log("Initializing game board and keyboard...");
     // Create the game board
     for (let r = 0; r < height; r++) {
         for (let c = 0; c < width; c++) {
@@ -207,7 +210,6 @@ function update() {
 
         if (correct === width) {
             gameOver = true;
-            saveProgress(); // Save progress when the game is over
         }
     }
 
@@ -236,83 +238,17 @@ function update() {
 
     row += 1;
     col = 0;
-    saveProgress(); // Save progress after each guess
 }
 
-// Extract user_id from URL
-function getQueryParam(param) {
-    let urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
+// Function to save user progress
+function saveProgress() {
+    console.log("Saving progress...");
+    // Save progress logic here
 }
 
-let userId = getQueryParam('user_id');
-
-// Function to save game progress
-async function saveProgress() {
-    let gameState = {
-        user_id: userId,
-        row: row,
-        col: col,
-        gameOver: gameOver,
-        word: word,
-        board: []
-    };
-
-    for (let r = 0; r < height; r++) {
-        let rowArray = [];
-        for (let c = 0; c < width; c++) {
-            let tile = document.getElementById(r.toString() + '-' + c.toString());
-            rowArray.push(tile.innerText);
-        }
-        gameState.board.push(rowArray);
-    }
-
-    try {
-        const response = await fetch('https://my-web-app-wordly.onrender.com/save_progress', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(gameState)
-        });
-        const data = await response.json();
-        console.log("Progress saved: ", data.message);
-    } catch (error) {
-        console.error('Error saving progress:', error);
-    }
-}
-
-// Function to load game progress
-async function loadProgress() {
-    try {
-        const response = await fetch(`https://my-web-app-wordly.onrender.com/load_progress?user_id=${userId}`);
-        const data = await response.json();
-
-        if (data) {
-            row = data.row;
-            col = data.col;
-            gameOver = data.gameOver;
-            word = data.word;
-
-            for (let r = 0; r < height; r++) {
-                for (let c = 0; c < width; c++) {
-                    let tile = document.getElementById(r.toString() + '-' + c.toString());
-                    tile.innerText = data.board[r][c];
-
-                    if (data.board[r][c] !== "") {
-                        if (word[c] === data.board[r][c]) {
-                            tile.classList.add("correct");
-                        } else if (word.includes(data.board[r][c])) {
-                            tile.classList.add("present");
-                        } else {
-                            tile.classList.add("absent");
-                        }
-                    }
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error loading progress:', error);
-    }
+// Function to load user progress
+function loadProgress() {
+    console.log("Loading progress...");
+    // Load progress logic here
 }
 
