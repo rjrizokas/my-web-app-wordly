@@ -2,7 +2,7 @@ import os
 import requests
 import base64
 import json
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import datetime
 
@@ -15,11 +15,10 @@ if not GITHUB_TOKEN:
 
 REPO_OWNER = 'rjrizokas'
 REPO_NAME = 'my-web-app-wordly'
-WORDS_FILE_PATH_PLAYER1 = 'words.json'
-WORDS_FILE_PATH_PLAYER2 = 'words1.json'
+WORDS_FILE_PATH = 'words.json'
+WORDS1_FILE_PATH = 'words1.json'
 WORDLIST_FILE_PATH = 'wordlist.json'
 
-# Функция для получения содержимого файла на GitHub
 def get_github_file_content(file_path):
     url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{file_path}'
     headers = {
@@ -27,14 +26,15 @@ def get_github_file_content(file_path):
         'Accept': 'application/vnd.github.v3+json'
     }
     response = requests.get(url, headers=headers)
+    print(f"GET request to {url} returned status code {response.status_code}")
     if response.status_code == 200:
         content = response.json()
         file_content = base64.b64decode(content['content']).decode()
         return json.loads(file_content)
     else:
+        print("Error fetching file:", response.status_code, response.json())
         response.raise_for_status()
 
-# Функция для обновления содержимого файла на GitHub
 def update_github_file_content(file_path, file_content):
     url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{file_path}'
     headers = {
@@ -48,6 +48,7 @@ def update_github_file_content(file_path, file_content):
     if response.status_code == 200:
         sha = response.json().get('sha')
     else:
+        print("Error fetching file SHA:", response.status_code, response.json())
         response.raise_for_status()
 
     data = {
@@ -57,34 +58,37 @@ def update_github_file_content(file_path, file_content):
         'branch': 'main'
     }
     response = requests.put(url, headers=headers, json=data)
+    print(f"PUT request to {url} returned status code {response.status_code}")
     if response.status_code == 200:
         return response.json()
     else:
+        print("Error updating file:", response.status_code, response.json())
         response.raise_for_status()
 
-# Загрузка слов и списка допустимых слов
 try:
-    words_player1 = get_github_file_content(WORDS_FILE_PATH_PLAYER1)
-    words_player2 = get_github_file_content(WORDS_FILE_PATH_PLAYER2)
+    words = get_github_file_content(WORDS_FILE_PATH)
     wordlist = get_github_file_content(WORDLIST_FILE_PATH)
 except Exception as e:
     print(f"Failed to fetch words or wordlist: {e}")
-    words_player1 = {}
-    words_player2 = {}
+    words = {}
     wordlist = []
+
+try:
+    words1 = get_github_file_content(WORDS1_FILE_PATH)
+except Exception as e:
+    print(f"Failed to fetch words or wordlist: {e}")
+    words1 = {}
 
 @app.route('/get_word', methods=['GET'])
 def get_word():
-    player = request.args.get('player', 'player1')
     day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
-    
-    if player == 'player1':
-        word = words_player1.get(day_of_week, "СЛОВО")
-    elif player == 'player2':
-        word = words_player2.get(day_of_week, "СЛОВО")
-    else:
-        return jsonify({"message": "Invalid player"}), 400
-    
+    word = words.get(day_of_week, "СЛОВО")
+    return jsonify({"word": word})
+
+@app.route('/get_word1', methods=['GET'])
+def get_word1():
+    day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
+    word = words1.get(day_of_week, "СЛОВО")
     return jsonify({"word": word})
 
 @app.route('/get_wordlist', methods=['GET'])
@@ -93,35 +97,31 @@ def get_wordlist():
 
 @app.route('/update_word', methods=['POST'])
 def update_word():
-    player = request.json.get('player', 'player1')
-    data = request.json.get('words', {})
-    
-    if player == 'player1':
-        words = words_player1
-        file_path = WORDS_FILE_PATH_PLAYER1
-    elif player == 'player2':
-        words = words_player2
-        file_path = WORDS_FILE_PATH_PLAYER2
-    else:
-        return jsonify({"message": "Invalid player"}), 400
-    
+    data = request.json
     for key in data:
         if key in words:
             words[key] = data[key]
-    
     file_content = json.dumps(words, ensure_ascii=False)
     try:
-        update_github_file_content(file_path, file_content)
-        if player == 'player1':
-            global words_player1
-            words_player1 = words
-        else:
-            global words_player2
-            words_player2 = words
+        update_github_file_content(WORDS_FILE_PATH, file_content)
         return jsonify({"message": "Words updated successfully!"})
     except Exception as e:
         print(f"Failed to update words: {e}")
         return jsonify({"message": "Error updating words!"}), 500
 
+@app.route('/update_word1', methods=['POST'])
+def update_word1():
+    data = request.json
+    for key in data:
+        if key in words1:
+            words1[key] = data[key]
+    file_content = json.dumps(words1, ensure_ascii=False)
+    try:
+        update_github_file_content(WORDS1_FILE_PATH, file_content)
+        return jsonify({"message": "Words updated successfully!"})
+    except Exception as e:
+        print(f"Failed to update words: {e}")
+        return jsonify({"message": "Error updating words!"}), 500
+        
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
