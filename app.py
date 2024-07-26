@@ -124,4 +124,4 @@ def update_word1():
         return jsonify({"message": "Error updating words!"}), 500
         
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))  # Запускаем на порту 5000
