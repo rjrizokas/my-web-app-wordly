@@ -13,8 +13,9 @@ let guessList = ["ааааа"];
 guessList = guessList.concat(wordList);
 
 window.onload = function() {
-    intialize();
+    initialize();
     fetchWord(); // Fetch the word from the server on page load
+    loadProgress(); // Load user progress on page load
 
     // Add event listener for the Update Word button
     document.getElementById('updateWord').addEventListener('click', () => {
@@ -33,7 +34,7 @@ async function fetchWord() {
     }
 }
 
-function intialize() {
+function initialize() {
     // Create the game board
     for (let r = 0; r < height; r++) {
         for (let c = 0; c < width; c++) {
@@ -109,7 +110,6 @@ function getLetterFromKeyCode(keyCode) {
     return "";
 }
 
-
 function processKey() {
     let key = this.id;
     if (key === "Enter" || key === "Backspace") {
@@ -121,9 +121,6 @@ function processKey() {
         processInput(event);
     }
 }
-
-
-
 
 function processInput(e) {
     console.log(`Processing input: ${e.code}`);
@@ -159,10 +156,6 @@ function processInput(e) {
         document.getElementById("answer").innerText = word;
     }
 }
-
-
-
-
 
 function update() {
     let guess = "";
@@ -214,6 +207,7 @@ function update() {
 
         if (correct === width) {
             gameOver = true;
+            saveProgress(); // Save progress when the game is over
         }
     }
 
@@ -242,5 +236,84 @@ function update() {
 
     row += 1;
     col = 0;
+    saveProgress(); // Save progress after each guess
 }
+
+// Extract user_id from URL
+function getQueryParam(param) {
+    let urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+let userId = getQueryParam('user_id');
+
+// Function to save game progress
+async function saveProgress() {
+    let gameState = {
+        user_id: userId,
+        row: row,
+        col: col,
+        gameOver: gameOver,
+        word: word,
+        board: []
+    };
+
+    for (let r = 0; r < height; r++) {
+        let rowArray = [];
+        for (let c = 0; c < width; c++) {
+            let tile = document.getElementById(r.toString() + '-' + c.toString());
+            rowArray.push(tile.innerText);
+        }
+        gameState.board.push(rowArray);
+    }
+
+    try {
+        const response = await fetch('https://my-web-app-wordly.onrender.com/save_progress', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(gameState)
+        });
+        const data = await response.json();
+        console.log("Progress saved: ", data.message);
+    } catch (error) {
+        console.error('Error saving progress:', error);
+    }
+}
+
+// Function to load game progress
+async function loadProgress() {
+    try {
+        const response = await fetch(`https://my-web-app-wordly.onrender.com/load_progress?user_id=${userId}`);
+        const data = await response.json();
+
+        if (data) {
+            row = data.row;
+            col = data.col;
+            gameOver = data.gameOver;
+            word = data.word;
+
+            for (let r = 0; r < height; r++) {
+                for (let c = 0; c < width; c++) {
+                    let tile = document.getElementById(r.toString() + '-' + c.toString());
+                    tile.innerText = data.board[r][c];
+
+                    if (data.board[r][c] !== "") {
+                        if (word[c] === data.board[r][c]) {
+                            tile.classList.add("correct");
+                        } else if (word.includes(data.board[r][c])) {
+                            tile.classList.add("present");
+                        } else {
+                            tile.classList.add("absent");
+                        }
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error loading progress:', error);
+    }
+}
+
 
