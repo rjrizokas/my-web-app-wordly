@@ -1,52 +1,22 @@
 from aiogram import Bot, Dispatcher, types
-from aiogram.utils.executor import start_webhook
+from aiogram.utils import executor
 import os
 
-API_TOKEN = '7439794203:AAEQGaP_uSsTh7c5onzP1VMrLo9VO1rmmtk'
-
-WEBHOOK_HOST = 'https://my-web-app-wordly.onrender.com'
-WEBHOOK_PATH = '/webhook'
-WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
+API_TOKEN = 'YOUR_API_TOKEN'
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
-allowed_users1 = ["vio_goncharova", "nft337"]
-allowed_users2 = ["rjrizo", "nft337"]
-
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
-    markup = types.ReplyKeyboardMarkup()
-
-    markup.add(types.KeyboardButton('слово от RJ', web_app=WebAppInfo(
-        url='https://rjrizokas.github.io/my-web-app-wordly/wordle.html')))
-
-    markup.add(types.KeyboardButton('слово от Ви', web_app=WebAppInfo(
-        url='https://rjrizokas.github.io/my-web-app-wordly/wordle1.html')))
-
-    if message.from_user.username in allowed_users2:
-        markup.add(types.KeyboardButton('загадать слово от RJ', web_app=WebAppInfo(
-            url='https://rjrizokas.github.io/my-web-app-wordly/update.html')))
-
-    if message.from_user.username in allowed_users1:
-        markup.add(types.KeyboardButton('загадать слово от Ви', web_app=WebAppInfo(
-            url='https://rjrizokas.github.io/my-web-app-wordly/update1.html')))
-
-    await message.answer('Что наша жизнь?', reply_markup=markup)
+    # Ваш код обработки команды /start...
 
 async def on_startup(dp):
-    await bot.set_webhook(WEBHOOK_URL)
+    print('Starting bot...')
 
 async def on_shutdown(dp):
-    await bot.delete_webhook()
+    print('Shutting down bot...')
 
 if __name__ == '__main__':
-    start_webhook(
-        dispatcher=dp,
-        webhook_path=WEBHOOK_PATH,
-        on_startup=on_startup,
-        on_shutdown=on_shutdown,
-        skip_updates=True,
-        host='0.0.0.0',
-        port=int(os.environ.get('PORT', 5000))
-    )
+    # Запускаем бота в режиме опроса
+    executor.start_polling(dp, on_startup=on_startup, on_shutdown=on_shutdown)
