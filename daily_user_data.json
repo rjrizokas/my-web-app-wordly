@@ -1,0 +1,7 @@
+{
+  "user123": {
+    "guessList": ["слово1", "слово2"],
+    "currentRow": 1,
+    "currentCol": 0
+  }
+}
