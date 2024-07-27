@@ -16,7 +16,7 @@ window.onload = function() {
     });
     loadProgress(); // Load user progress on page load
 
-    // No need for the Update Word button code
+
 }
 
 async function fetchWord() {
@@ -134,7 +134,7 @@ function processKey() {
 }
 
 function processInput(e) {
-    console.log(`Processing input: ${e.code}`);
+    console.log(Processing input: ${e.code});
 
     if (gameOver) return;
 
@@ -230,8 +230,7 @@ function update() {
 
     row += 1;
     col = 0;
-
-    saveProgress(); // Save progress after each attempt
+saveProgress(); // Save progress after each attempt
 }
 
 async function saveProgress() {
