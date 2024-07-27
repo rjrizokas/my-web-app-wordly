@@ -16,17 +16,18 @@ allowed_users2 = ["rjrizo", "nft337"]
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
+    user_id = message.from_user.id
     markup = types.ReplyKeyboardMarkup()
     markup.add(types.KeyboardButton('слово от RJ', web_app=types.WebAppInfo(
-        url='https://rjrizokas.github.io/my-web-app-wordly/wordle.html')))
+        url=f'https://rjrizokas.github.io/my-web-app-wordly/wordle.html?user_id={user_id}')))
     markup.add(types.KeyboardButton('слово от Ви', web_app=types.WebAppInfo(
-        url='https://rjrizokas.github.io/my-web-app-wordly/wordle1.html')))
+        url=f'https://rjrizokas.github.io/my-web-app-wordly/wordle1.html?user_id={user_id}')))
     if message.from_user.username in allowed_users2:
         markup.add(types.KeyboardButton('загадать слово от RJ', web_app=types.WebAppInfo(
-            url='https://rjrizokas.github.io/my-web-app-wordly/update.html')))
+            url=f'https://rjrizokas.github.io/my-web-app-wordly/update.html?user_id={user_id}')))
     if message.from_user.username in allowed_users1:
         markup.add(types.KeyboardButton('загадать слово от Ви', web_app=types.WebAppInfo(
-            url='https://rjrizokas.github.io/my-web-app-wordly/update1.html')))
+            url=f'https://rjrizokas.github.io/my-web-app-wordly/update1.html?user_id={user_id}')))
     await message.answer('Что наша жизнь?', reply_markup=markup)
 
 async def on_startup(dp):
