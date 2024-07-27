@@ -1,4 +1,5 @@
 let wordList = [];
+let initialWords = {};
 
 async function fetchWordList() {
     try {
@@ -10,6 +11,33 @@ async function fetchWordList() {
         console.error('Ошибка загрузки списка допустимых слов:', error);
         alert('Ошибка загрузки списка допустимых слов.');
     }
+}
+
+async function fetchInitialWords() {
+    try {
+        const response = await fetch('https://my-web-app-wordly.onrender.com/get_initial_words');
+        const data = await response.json();
+        if (data.words) {
+            initialWords = data.words;
+            console.log('Initial words loaded:', initialWords);
+            displayInitialWords();
+        } else {
+            console.error('Ошибка загрузки начальных слов:', data.error);
+            alert('Ошибка загрузки начальных слов.');
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки начальных слов:', error);
+        alert('Ошибка загрузки начальных слов.');
+    }
+}
+
+function displayInitialWords() {
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    days.forEach((day, index) => {
+        const input = document.getElementById(`word${index + 1}`);
+        input.value = initialWords[day] || '';
+        input.style.color = 'rgba(128, 128, 128, 0.5)';  // Полупрозрачный серый цвет
+    });
 }
 
 async function updateAllWords() {
@@ -58,4 +86,5 @@ async function updateAllWords() {
 
 window.onload = function() {
     fetchWordList();
+    fetchInitialWords();
 }
