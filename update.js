@@ -4,7 +4,7 @@ async function fetchWordList() {
     try {
         const response = await fetch('https://my-web-app-wordly.onrender.com/get_wordlist');
         const data = await response.json();
-        wordList = data.wordlist.map(word => word.toUpperCase()); // Преобразование слов в верхний регистр для соответствия вводу
+        wordList = data.wordlist.map(word => word.toUpperCase());
         console.log('Wordlist loaded:', wordList);
     } catch (error) {
         console.error('Ошибка загрузки списка допустимых слов:', error);
