@@ -6,18 +6,21 @@ let col = 0; // current letter for that attempt
 
 let gameOver = false;
 let word = ''; // The word to guess, initialized as empty
-let wordList = ["агава", "аллах"]
+let wordList = ["агава", "аллах"];
+
 let guessList = ["ааааа"];
 
 guessList = guessList.concat(wordList);
 
 window.onload = function() {
-    console.log("Page loaded, initializing game...");
-    initialize();
+	console.log("Page loaded, initializing game...");
+    intialize();
+
     fetchWordList().then(() => {
         fetchWord(); // Fetch the word from the server after word list is loaded
     });
     loadProgress(); // Load user progress on page load
+    fetchWord(); // Fetch the word from the server on page load
 
     // Add event listener for the Update Word button
     document.getElementById('updateWord').addEventListener('click', () => {
@@ -50,6 +53,7 @@ async function fetchWordList() {
         alert('Error fetching word list.');
     }
 }
+
 
 function intialize() {
     // Create the game board
@@ -260,7 +264,7 @@ function update() {
 
     row += 1;
     col = 0;
- saveProgress(); // Save progress after each attempt
+	saveProgress(); // Save progress after each attempt
 }
 
 async function saveProgress() {
@@ -316,4 +320,5 @@ async function loadProgress() {
         console.error('Error loading progress:', error);
     }
 }
+
 
