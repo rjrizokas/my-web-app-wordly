@@ -7,9 +7,8 @@ let col = 0; // current letter for that attempt
 let gameOver = false;
 let word = ''; // The word to guess, initialized as empty
 let wordList = []
-let guessList = ["ааааа"];
+let guessList = []; // List of guesses made
 
-guessList = guessList.concat(wordList);
 window.onload = function() {
     console.log("Page loaded, initializing game...");
     initialize();
@@ -42,6 +41,7 @@ async function fetchWordList() {
         const response = await fetch('https://my-web-app-wordly.onrender.com/get_wordlist');
         const data = await response.json();
         wordList = data.wordlist.map(word => word.toUpperCase()); // Ensure all words are uppercase
+        guessList = guessList.concat(wordList);
         console.log("Word list:", wordList);
     } catch (error) {
         console.error('Error fetching word list:', error);
