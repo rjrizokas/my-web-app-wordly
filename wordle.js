@@ -12,9 +12,12 @@ let guessList = ["ааааа"];
 guessList = guessList.concat(wordList);
 
 window.onload = function() {
-    intialize();
-    fetchWord(); // Fetch the word from the server on page load
-    wordList = data.wordlist.map(word => word.toUpperCase());
+    console.log("Page loaded, initializing game...");
+    initialize();
+    fetchWordList().then(() => {
+        fetchWord(); // Fetch the word from the server after word list is loaded
+    });
+    loadProgress(); // Load user progress on page load
 
     // Add event listener for the Update Word button
     document.getElementById('updateWord').addEventListener('click', () => {
@@ -24,12 +27,26 @@ window.onload = function() {
 
 async function fetchWord() {
     try {
+        console.log("Fetching word from server...");
         const response = await fetch('https://my-web-app-wordly.onrender.com/get_word');
         const data = await response.json();
         word = data.word.toUpperCase();
         console.log("Current word: ", word);
     } catch (error) {
         console.error('Error fetching word:', error);
+    }
+}
+
+async function fetchWordList() {
+    try {
+        console.log("Fetching word list from server...");
+        const response = await fetch('https://my-web-app-wordly.onrender.com/get_wordlist');
+        const data = await response.json();
+        wordList = data.wordlist.map(word => word.toUpperCase()); // Ensure all words are uppercase
+        console.log("Word list:", wordList);
+    } catch (error) {
+        console.error('Error fetching word list:', error);
+        alert('Error fetching word list.');
     }
 }
 
