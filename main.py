@@ -1,6 +1,11 @@
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils.executor import start_webhook
+import logging
 import os
+
+# Настройка логирования
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 API_TOKEN = '7439794203:AAEQGaP_uSsTh7c5onzP1VMrLo9VO1rmmtk'
 
@@ -33,16 +38,16 @@ async def start(message: types.Message):
 async def on_startup(dp):
     try:
         await bot.set_webhook(WEBHOOK_URL)
-        print(f"Webhook set to {WEBHOOK_URL}")
+        logger.info(f"Webhook set to {WEBHOOK_URL}")
     except Exception as e:
-        print(f"Failed to set webhook: {e}")
+        logger.error(f"Failed to set webhook: {e}")
 
 async def on_shutdown(dp):
     try:
         await bot.delete_webhook()
-        print("Webhook deleted")
+        logger.info("Webhook deleted")
     except Exception as e:
-        print(f"Failed to delete webhook: {e}")
+        logger.error(f"Failed to delete webhook: {e}")
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
