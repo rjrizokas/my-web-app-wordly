@@ -6,27 +6,26 @@ let col = 0; // current letter for that attempt
 
 let gameOver = false;
 let word = ''; // The word to guess, initialized as empty
-let wordList = ["агава", "аллах"];
+let wordList = [];
 
-let guessList = ["ааааа"];
 
-guessList = guessList.concat(wordList);
 
 window.onload = function() {
-	console.log("Page loaded, initializing game...");
     intialize();
-
     fetchWordList().then(() => {
-        fetchWord(); // Fetch the word from the server after word list is loaded
+        return fetchWord();
+    }).then(() => {
+        return loadProgress(); // Load user progress after word and word list are loaded
+    }).catch(error => {
+        console.error('Error during initialization:', error);
     });
-    loadProgress(); // Load user progress on page load
-    fetchWord(); // Fetch the word from the server on page load
 
     // Add event listener for the Update Word button
     document.getElementById('updateWord').addEventListener('click', () => {
         fetchWord(); // Fetch the word again when the button is clicked
     });
 }
+
 
 async function fetchWord() {
     try {
@@ -42,17 +41,16 @@ async function fetchWord() {
 
 async function fetchWordList() {
     try {
-        console.log("Fetching word list from server...");
         const response = await fetch('https://my-web-app-wordly.onrender.com/get_wordlist');
         const data = await response.json();
-        wordList = data.wordlist.map(word => word.toUpperCase()); // Ensure all words are uppercase
-        guessList = guessList.concat(wordList);
-        console.log("Word list:", wordList);
+        wordList = data.wordlist.map(word => word.toLowerCase()); // Приведение слов к нижнему регистру
+        console.log('Wordlist loaded:', wordList);
     } catch (error) {
-        console.error('Error fetching word list:', error);
-        alert('Error fetching word list.');
+        console.error('Ошибка загрузки списка допустимых слов:', error);
+        alert('Ошибка загрузки списка допустимых слов.');
     }
 }
+
 
 
 function intialize() {
@@ -190,24 +188,23 @@ function update() {
     let guess = "";
     document.getElementById("answer").innerText = "";
 
-    // Collect the guess from the board
     for (let c = 0; c < width; c++) {
         let currTile = document.getElementById(row.toString() + '-' + c.toString());
         let letter = currTile.innerText;
         guess += letter;
     }
 
-    guess = guess.toLowerCase();
+    guess = guess.toLowerCase(); // Приведение слова к нижнему регистру для проверки
     console.log(guess);
 
-    if (!guessList.includes(guess)) {
-        document.getElementById("answer").innerText = "Not in word list";
+    if (!wordList.includes(guess)) {
+        alert(`Ошибка: слово '${guess}' не входит в список допустимых слов.`);
         return;
     }
 
     let correct = 0;
-
     let letterCount = {};
+
     for (let i = 0; i < word.length; i++) {
         let letter = word[i];
         if (letterCount[letter]) {
@@ -216,8 +213,6 @@ function update() {
             letterCount[letter] = 1;
         }
     }
-
-    console.log(letterCount);
 
     for (let c = 0; c < width; c++) {
         let currTile = document.getElementById(row.toString() + '-' + c.toString());
@@ -239,7 +234,6 @@ function update() {
         }
     }
 
-    console.log(letterCount);
     for (let c = 0; c < width; c++) {
         let currTile = document.getElementById(row.toString() + '-' + c.toString());
         let letter = currTile.innerText;
@@ -264,61 +258,138 @@ function update() {
 
     row += 1;
     col = 0;
-	saveProgress(); // Save progress after each attempt
+    saveProgress(); // Save progress after each attempt
 }
 
+
 async function saveProgress() {
+    const user_id = new URLSearchParams(window.location.search).get('user_id');
+    
+    if (!user_id) {
+        console.error("User ID not found in URL");
+        return;
+    }
+
+    const progress = [];
+    
+    for (let r = 0; r < row; r++) {
+        let guess = "";
+        for (let c = 0; c < width; c++) {
+            let currTile = document.getElementById(r.toString() + '-' + c.toString());
+            guess += currTile.innerText;
+        }
+        progress.push(guess);
+    }
+
+    const data = {
+        user_id: user_id,
+        progress: progress
+    };
+
     try {
-        console.log("Saving progress...");
-        const userId = document.getElementById('user_id').value;
-        const progress = {
-            row: row,
-            col: col,
-            word: word,
-            guess: Array.from({length: height}, (_, r) => Array.from({length: width}, (_, c) => document.getElementById(r.toString() + '-' + c.toString()).innerText))
-        };
         const response = await fetch('https://my-web-app-wordly.onrender.com/save_progress', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ user_id: userId, progress: progress })
+            body: JSON.stringify(data)
         });
-        if (!response.ok) {
-            throw new Error('Failed to save progress');
-        }
-        console.log("Progress saved successfully.");
+        
+        const result = await response.json();
+        console.log(result.message);
     } catch (error) {
         console.error('Error saving progress:', error);
     }
 }
 
+
 async function loadProgress() {
+    const user_id = new URLSearchParams(window.location.search).get('user_id');
+    
+    if (!user_id) {
+        console.error("User ID not found in URL");
+        return;
+    }
+
     try {
-        console.log("Loading progress...");
-        const userId = document.getElementById('user_id').value;
-        const response = await fetch(`https://my-web-app-wordly.onrender.com/get_progress?user_id=${userId}`);
+        const response = await fetch(`https://my-web-app-wordly.onrender.com/get_progress?user_id=${user_id}`);
         const data = await response.json();
-        console.log("Loaded progress:", data);
-        if (data.progress) {
-            row = data.progress.row;
-            col = data.progress.col;
-            const savedGuesses = data.progress.guess;
-            savedGuesses.forEach((rowGuesses, r) => {
-                rowGuesses.forEach((letter, c) => {
-                    let tile = document.getElementById(r.toString() + '-' + c.toString());
-                    if (tile) {
-                        tile.innerText = letter;
-                        if (letter === '') return;
-                        // Apply styles based on the letter's status
-                        // This requires a more sophisticated approach based on your game logic
+        const progress = data.progress;
+
+        if (progress && progress.length > 0) {
+            row = progress.length;
+            for (let r = 0; r < progress.length; r++) {
+                let guess = progress[r];
+
+                // Заполняем плитки
+                for (let c = 0; c < width; c++) {
+                    let currTile = document.getElementById(r.toString() + '-' + c.toString());
+                    currTile.innerText = guess[c];
+                }
+
+                // Проверяем и окрашиваем плитки
+                let correct = 0;
+                let letterCount = {};
+
+                for (let i = 0; i < word.length; i++) {
+                    let letter = word[i];
+                    if (letterCount[letter]) {
+                        letterCount[letter] += 1;
+                    } else {
+                        letterCount[letter] = 1;
                     }
-                });
-            });
+                }
+
+                for (let c = 0; c < width; c++) {
+                    let currTile = document.getElementById(r.toString() + '-' + c.toString());
+                    let letter = currTile.innerText;
+
+                    if (word[c] === letter) {
+                        currTile.classList.add("correct");
+                        let keyTile = document.getElementById("Key" + letter);
+                        if (keyTile) {
+                            keyTile.classList.remove("present");
+                            keyTile.classList.add("correct");
+                        }
+                        correct += 1;
+                        letterCount[letter] -= 1;
+                    }
+
+                    if (correct === width) {
+                        gameOver = true;
+                    }
+                }
+
+                for (let c = 0; c < width; c++) {
+                    let currTile = document.getElementById(r.toString() + '-' + c.toString());
+                    let letter = currTile.innerText;
+
+                    if (!currTile.classList.contains("correct")) {
+                        if (word.includes(letter) && letterCount[letter] > 0) {
+                            currTile.classList.add("present");
+                            let keyTile = document.getElementById("Key" + letter);
+                            if (keyTile && !keyTile.classList.contains("correct")) {
+                                keyTile.classList.add("present");
+                            }
+                            letterCount[letter] -= 1;
+                        } else {
+                            currTile.classList.add("absent");
+                            let keyTile = document.getElementById("Key" + letter);
+                            if (keyTile) {
+                                keyTile.classList.add("absent");
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Устанавливаем текущий столбец на начало следующего ряда
+            col = 0;
         }
     } catch (error) {
         console.error('Error loading progress:', error);
     }
 }
+
 
 
