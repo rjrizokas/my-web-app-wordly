@@ -35,8 +35,19 @@ function displayInitialWords() {
     const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     days.forEach((day, index) => {
         const input = document.getElementById(`word${index + 1}`);
-        input.value = initialWords[day] || '';
-        input.style.color = 'rgba(128, 128, 128, 0.5)';  // Полупрозрачный серый цвет
+        if (initialWords[day]) {
+            input.value = initialWords[day];
+            input.style.color = 'rgba(128, 128, 128, 0.5)';  // Полупрозрачный серый цвет
+        }
+
+        // Добавить обработчик событий для изменения цвета текста при вводе новых слов
+        input.addEventListener('input', () => {
+            if (input.value.toUpperCase() !== (initialWords[day] || '').toUpperCase()) {
+                input.style.color = 'black';
+            } else {
+                input.style.color = 'rgba(128, 128, 128, 0.5)';
+            }
+        });
     });
 }
 
