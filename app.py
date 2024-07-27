@@ -189,9 +189,9 @@ def save_progress():
         user_id = data['user_id']
         progress = data['progress']
         date = datetime.datetime.now().strftime("%Y-%m-%d")
-        
+
         daily_user_data = get_daily_user_data(DAILY_USER_DATA_FILE_PATH)
-        
+
         if date not in daily_user_data:
             daily_user_data[date] = {}
         daily_user_data[date][user_id] = progress
@@ -201,6 +201,24 @@ def save_progress():
         return jsonify({"message": "Progress saved successfully."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/get_progress', methods=['GET'])
+def get_progress():
+    try:
+        user_id = request.args.get('user_id')
+        date = datetime.datetime.now().strftime("%Y-%m-%d")
+
+        daily_user_data = get_daily_user_data(DAILY_USER_DATA_FILE_PATH)
+
+        if date in daily_user_data and user_id in daily_user_data[date]:
+            progress = daily_user_data[date][user_id]
+        else:
+            progress = []
+
+        return jsonify({"progress": progress}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))  # Запускаем на порту 5000
