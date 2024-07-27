@@ -12,8 +12,12 @@ let guessList = ["ааааа"];
 guessList = guessList.concat(wordList);
 
 window.onload = function() {
-    intialize();
-    fetchWord(); // Fetch the word from the server on page load
+    console.log("Page loaded, initializing game...");
+    initialize();
+    fetchWordList().then(() => {
+        fetchWord(); // Fetch the word from the server after word list is loaded
+    });
+    loadProgress(); // Load user progress on page load
 
     // Add event listener for the Update Word button
     document.getElementById('updateWord').addEventListener('click', () => {
