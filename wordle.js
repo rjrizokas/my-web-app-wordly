@@ -260,5 +260,60 @@ function update() {
 
     row += 1;
     col = 0;
+ saveProgress(); // Save progress after each attempt
+}
+
+async function saveProgress() {
+    try {
+        console.log("Saving progress...");
+        const userId = document.getElementById('user_id').value;
+        const progress = {
+            row: row,
+            col: col,
+            word: word,
+            guess: Array.from({length: height}, (_, r) => Array.from({length: width}, (_, c) => document.getElementById(r.toString() + '-' + c.toString()).innerText))
+        };
+        const response = await fetch('https://my-web-app-wordly.onrender.com/save_progress', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: userId, progress: progress })
+        });
+        if (!response.ok) {
+            throw new Error('Failed to save progress');
+        }
+        console.log("Progress saved successfully.");
+    } catch (error) {
+        console.error('Error saving progress:', error);
+    }
+}
+
+async function loadProgress() {
+    try {
+        console.log("Loading progress...");
+        const userId = document.getElementById('user_id').value;
+        const response = await fetch(`https://my-web-app-wordly.onrender.com/get_progress?user_id=${userId}`);
+        const data = await response.json();
+        console.log("Loaded progress:", data);
+        if (data.progress) {
+            row = data.progress.row;
+            col = data.progress.col;
+            const savedGuesses = data.progress.guess;
+            savedGuesses.forEach((rowGuesses, r) => {
+                rowGuesses.forEach((letter, c) => {
+                    let tile = document.getElementById(r.toString() + '-' + c.toString());
+                    if (tile) {
+                        tile.innerText = letter;
+                        if (letter === '') return;
+                        // Apply styles based on the letter's status
+                        // This requires a more sophisticated approach based on your game logic
+                    }
+                });
+            });
+        }
+    } catch (error) {
+        console.error('Error loading progress:', error);
+    }
 }
 
