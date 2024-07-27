@@ -6,7 +6,9 @@ let col = 0; // current letter for that attempt
 
 let gameOver = false;
 let word = ''; // The word to guess, initialized as empty
-let wordList = []; // List of valid words
+let wordList = [];
+let guessList = [];
+let userId = new URLSearchParams(window.location.search).get('user_id');
 
 window.onload = function() {
     console.log("Page loaded, initializing game...");
@@ -15,11 +17,6 @@ window.onload = function() {
         fetchWord(); // Fetch the word from the server after word list is loaded
     });
     loadProgress(); // Load user progress on page load
-
-    // Add event listener for the Update Word button
-    document.getElementById('updateWord').addEventListener('click', () => {
-        fetchWord(); // Fetch the word again when the button is clicked
-    });
 }
 
 async function fetchWord() {
@@ -39,11 +36,60 @@ async function fetchWordList() {
         console.log("Fetching word list from server...");
         const response = await fetch('https://my-web-app-wordly.onrender.com/get_wordlist');
         const data = await response.json();
-        wordList = data.wordlist.map(word => word.toUpperCase()); // Ensure all words are uppercase
+        wordList = data.wordlist.map(word => word.toUpperCase());
+        guessList = guessList.concat(wordList);
         console.log("Word list:", wordList);
     } catch (error) {
         console.error('Error fetching word list:', error);
         alert('Error fetching word list.');
+    }
+}
+
+async function saveProgress() {
+    try {
+        console.log("Saving progress...");
+        const progress = [];
+        for (let r = 0; r < row; r++) {
+            let guess = '';
+            for (let c = 0; c < width; c++) {
+                let tile = document.getElementById(r.toString() + '-' + c.toString());
+                guess += tile.innerText;
+            }
+            progress.push(guess);
+        }
+
+        const response = await fetch('https://my-web-app-wordly.onrender.com/save_progress', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: userId, progress })
+        });
+
+        const data = await response.json();
+        console.log(data.message);
+    } catch (error) {
+        console.error('Error saving progress:', error);
+    }
+}
+
+async function loadProgress() {
+    try {
+        console.log("Loading progress...");
+        const response = await fetch(`https://my-web-app-wordly.onrender.com/get_progress?user_id=${userId}`);
+        const data = await response.json();
+        if (data.progress) {
+            for (let i = 0; i < data.progress.length; i++) {
+                let guess = data.progress[i];
+                for (let c = 0; c < width; c++) {
+                    let tile = document.getElementById(i.toString() + '-' + c.toString());
+                    tile.innerText = guess[c].toUpperCase();
+                }
+                row += 1;
+            }
+        }
+    } catch (error) {
+        console.error('Error loading progress:', error);
     }
 }
 
@@ -77,9 +123,9 @@ function initialize() {
 
             let key = currRow[j];
             keyTile.innerText = key;
-            if (key === "Enter") {
+            if (key == "Enter") {
                 keyTile.id = "Enter";
-            } else if (key === "⌫") {
+            } else if (key == "⌫") {
                 keyTile.id = "Backspace";
             } else {
                 keyTile.id = "Key" + key;
@@ -87,9 +133,9 @@ function initialize() {
 
             keyTile.addEventListener("click", processKey);
 
-            if (key === "Enter") {
+            if (key == "Enter") {
                 keyTile.classList.add("enter-key-tile");
-            } else if (key === "⌫") {
+            } else if (key == "⌫") {
                 keyTile.classList.add("backspace-key-tile");
             } else {
                 keyTile.classList.add("key-tile");
@@ -182,11 +228,10 @@ function update() {
         guess += letter;
     }
 
-    guess = guess.toUpperCase(); // Convert guess to uppercase
-    console.log("Guess: ", guess);
+    guess = guess.toLowerCase();
+    console.log(guess);
 
-    // Check if guess is in the word list
-    if (!wordList.includes(guess)) {
+    if (!guessList.includes(guess)) {
         document.getElementById("answer").innerText = "Not in word list";
         return;
     }
@@ -230,6 +275,8 @@ function update() {
             }
         }
     }
+
+    saveProgress(); // Save progress after each attempt
 
     row += 1;
     col = 0;
