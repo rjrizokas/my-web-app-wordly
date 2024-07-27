@@ -182,5 +182,26 @@ def update_daily_user_data_route():
     update_daily_user_data(file_path, user_data)
     return jsonify({"message": "User data updated successfully!"})
 
+@app.route('/save_progress', methods=['POST'])
+def save_progress():
+    try:
+        data = request.get_json()
+        user_id = data['user_id']
+        progress = data['progress']
+        date = datetime.datetime.now().strftime("%Y-%m-%d")
+        
+        daily_user_data = get_daily_user_data(DAILY_USER_DATA_FILE_PATH)
+        
+        if date not in daily_user_data:
+            daily_user_data[date] = {}
+        daily_user_data[date][user_id] = progress
+
+        update_daily_user_data(DAILY_USER_DATA_FILE_PATH, daily_user_data)
+
+        return jsonify({"message": "Progress saved successfully."}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))  # Запускаем на порту 5000
+
