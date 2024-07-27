@@ -274,21 +274,22 @@ def get_progress1():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.get("/get_initial_words")
-async def get_initial_words():
+@app.route("/get_initial_words", methods=["GET"])
+def get_initial_words():
     try:
         words = get_github_file_content(WORDS_FILE_PATH)
         return {"words": words}
     except Exception as e:
         return {"error": str(e)}
 
-@app.get("/get_initial_words1")
-async def get_initial_words1():
+@app.route("/get_initial_words1", methods=["GET"])
+def get_initial_words1():
     try:
         words1 = get_github_file_content(WORDS1_FILE_PATH)
         return {"words1": words1}
     except Exception as e:
         return {"error": str(e)}
+
 
         
 # Запуск планировщика с указанием часового пояса
