@@ -27,6 +27,7 @@ window.onload = function() {
 
 async function fetchWord() {
     try {
+        console.log("Fetching word from server...");
         const response = await fetch('https://my-web-app-wordly.onrender.com/get_word');
         const data = await response.json();
         word = data.word.toUpperCase();
@@ -35,7 +36,6 @@ async function fetchWord() {
         console.error('Error fetching word:', error);
     }
 }
-
 function intialize() {
     // Create the game board
     for (let r = 0; r < height; r++) {
