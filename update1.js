@@ -1,12 +1,12 @@
-let wordList1 = [];
+let wordList = [];
 let initialWords1 = {};
 
-async function fetchWordList1() {
+async function fetchWordList() {
     try {
         const response = await fetch('https://my-web-app-wordly.onrender.com/get_wordlist');
         const data = await response.json();
-        wordList1 = data.wordlist.map(word => word.toUpperCase());
-        console.log('Wordlist loaded:', wordList1);
+        wordList = data.wordlist.map(word => word.toUpperCase());
+        console.log('Wordlist loaded:', wordList);
     } catch (error) {
         console.error('Ошибка загрузки списка допустимых слов:', error);
         alert('Ошибка загрузки списка допустимых слов.');
@@ -19,7 +19,7 @@ async function fetchInitialWords1() {
         const data = await response.json();
         if (data.words1) {
             initialWords1 = data.words1;
-            console.log('Initial words loaded:', initialWords1);
+            console.log('Initial words1 loaded:', initialWords1);
             displayInitialWords1();
         } else {
             console.error('Ошибка загрузки начальных слов:', data.error);
@@ -35,13 +35,24 @@ function displayInitialWords1() {
     const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     days.forEach((day, index) => {
         const input = document.getElementById(`word${index + 1}`);
-        input.value = initialWords1[day] || '';
-        input.style.color = 'rgba(128, 128, 128, 0.5)';  // Полупрозрачный серый цвет
+        if (initialWords1[day]) {
+            input.value = initialWords1[day];
+            input.style.color = 'rgba(128, 128, 128, 0.5)';  // Полупрозрачный серый цвет
+        }
+
+        // Добавить обработчик событий для изменения цвета текста при вводе новых слов
+        input.addEventListener('input', () => {
+            if (input.value.toUpperCase() !== (initialWords1[day] || '').toUpperCase()) {
+                input.style.color = 'black';
+            } else {
+                input.style.color = 'rgba(128, 128, 128, 0.5)';
+            }
+        });
     });
 }
 
-async function updateAllWords1() {
-    const words = {
+async function updateAllWords() {
+    const words1 = {
         monday: document.getElementById('word1').value.toUpperCase(),
         tuesday: document.getElementById('word2').value.toUpperCase(),
         wednesday: document.getElementById('word3').value.toUpperCase(),
@@ -51,14 +62,14 @@ async function updateAllWords1() {
         sunday: document.getElementById('word7').value.toUpperCase()
     };
 
-    for (const day in words) {
-        if (words[day] === "") {
-            delete words[day];
+    for (const day in words1) {
+        if (words1[day] === "") {
+            delete words1[day];
         }
     }
 
-    for (const word of Object.values(words)) {
-        if (!wordList1.includes(word)) {
+    for (const word of Object.values(words1)) {
+        if (!wordList.includes(word)) {
             alert(`Ошибка: слово '${word}' не входит в список допустимых слов.`);
             return;
         }
@@ -70,7 +81,7 @@ async function updateAllWords1() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(words)
+            body: JSON.stringify(words1)
         });
 
         if (response.ok) {
@@ -85,6 +96,6 @@ async function updateAllWords1() {
 }
 
 window.onload = function() {
-    fetchWordList1();
+    fetchWordList();
     fetchInitialWords1();
 }
