@@ -237,11 +237,48 @@ def get_progress():
         return jsonify({"progress": progress}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+@app.route('/save_progress1', methods=['POST'])
+def save_progress1():
+    try:
+        data = request.get_json()
+        user_id = data['user_id']
+        progress = data['progress']
+        date = datetime.datetime.now().strftime("%Y-%m-%d")
 
+        daily_user_data = get_daily_user_data(DAILY_USER_DATA1_FILE_PATH)
+
+        if date not in daily_user_data:
+            daily_user_data[date] = {}
+        daily_user_data[date][user_id] = progress
+
+        update_daily_user_data(DAILY_USER_DATA1_FILE_PATH, daily_user_data)
+
+        return jsonify({"message": "Progress saved successfully."}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/get_progress1', methods=['GET'])
+def get_progress1():
+    try:
+        user_id = request.args.get('user_id')
+        date = datetime.datetime.now().strftime("%Y-%m-%d")
+
+        daily_user_data = get_daily_user_data(DAILY_USER_DATA1_FILE_PATH)
+
+        if date in daily_user_data and user_id in daily_user_data[date]:
+            progress = daily_user_data[date][user_id]
+        else:
+            progress = []
+
+        return jsonify({"progress": progress}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
 # Запуск планировщика с указанием часового пояса
 timezone = pytz.timezone('Europe/Berlin')
 scheduler = BackgroundScheduler()
-scheduler.add_job(reset_daily_data, CronTrigger(hour=0, minute=0, timezone=timezone))
+scheduler.add_job(lambda: reset_daily_data(DAILY_USER_DATA_FILE_PATH), CronTrigger(hour=0, minute=0, timezone=timezone))
+scheduler.add_job(lambda: reset_daily_data(DAILY_USER_DATA1_FILE_PATH), CronTrigger(hour=0, minute=0, timezone=timezone))
 scheduler.start()
 
 if __name__ == '__main__':
