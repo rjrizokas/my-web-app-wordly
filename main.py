@@ -7,9 +7,9 @@ import os
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-API_TOKEN = '7439794203:AAEQGaP_uSsTh7c5onzP1VMrLo9VO1rmmtk'
+API_TOKEN = os.getenv('API_TOKEN', 'YOUR_DEFAULT_API_TOKEN')  # Установите ваш API токен
 
-WEBHOOK_HOST = 'https://my-web-app-wordly-tg.onrender.com'  # Ваш реальный домен
+WEBHOOK_HOST = os.getenv('RENDER_EXTERNAL_URL', 'https://my-web-app-wordly-tg.onrender.com')  # URL вашего сервиса на Render
 WEBHOOK_PATH = '/webhook'
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
@@ -50,7 +50,8 @@ async def on_shutdown(dp):
         logger.error(f"Failed to delete webhook: {e}")
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.getenv('PORT', 10000))  # Render автоматически установит значение PORT
+    logger.info(f"Starting webhook on port {port}")
     start_webhook(
         dispatcher=dp,
         webhook_path=WEBHOOK_PATH,
