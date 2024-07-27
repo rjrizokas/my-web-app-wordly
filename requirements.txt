@@ -3,3 +3,4 @@ flask-cors==4.0.1
 gunicorn==20.1.0
 requests
 aiogram==2.25.1 
+apscheduler
