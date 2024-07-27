@@ -16,13 +16,7 @@ window.onload = function() {
     });
     loadProgress(); // Load user progress on page load
 
-    // Add event listener for the Update Word button
-    const updateWordButton = document.getElementById('updateWord');
-    if (updateWordButton) {
-        updateWordButton.addEventListener('click', () => {
-            fetchWord(); // Fetch the word again when the button is clicked
-        });
-    }
+    // No need for the Update Word button code
 }
 
 async function fetchWord() {
