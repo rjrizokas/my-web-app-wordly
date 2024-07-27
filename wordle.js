@@ -10,7 +10,6 @@ let wordList = []
 let guessList = ["ааааа"];
 
 guessList = guessList.concat(wordList);
-
 window.onload = function() {
     console.log("Page loaded, initializing game...");
     initialize();
