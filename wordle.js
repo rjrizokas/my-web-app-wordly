@@ -6,8 +6,7 @@ let col = 0; // current letter for that attempt
 
 let gameOver = false;
 let word = ''; // The word to guess, initialized as empty
-let wordList = [];
-let guessList = [];
+let wordList = []; // List of valid words
 
 window.onload = function() {
     console.log("Page loaded, initializing game...");
@@ -40,8 +39,7 @@ async function fetchWordList() {
         console.log("Fetching word list from server...");
         const response = await fetch('https://my-web-app-wordly.onrender.com/get_wordlist');
         const data = await response.json();
-        wordList = data.wordlist.map(word => word.toUpperCase());
-        guessList = guessList.concat(wordList);
+        wordList = data.wordlist.map(word => word.toUpperCase()); // Ensure all words are uppercase
         console.log("Word list:", wordList);
     } catch (error) {
         console.error('Error fetching word list:', error);
@@ -79,9 +77,9 @@ function initialize() {
 
             let key = currRow[j];
             keyTile.innerText = key;
-            if (key == "Enter") {
+            if (key === "Enter") {
                 keyTile.id = "Enter";
-            } else if (key == "⌫") {
+            } else if (key === "⌫") {
                 keyTile.id = "Backspace";
             } else {
                 keyTile.id = "Key" + key;
@@ -89,9 +87,9 @@ function initialize() {
 
             keyTile.addEventListener("click", processKey);
 
-            if (key == "Enter") {
+            if (key === "Enter") {
                 keyTile.classList.add("enter-key-tile");
-            } else if (key == "⌫") {
+            } else if (key === "⌫") {
                 keyTile.classList.add("backspace-key-tile");
             } else {
                 keyTile.classList.add("key-tile");
@@ -184,10 +182,11 @@ function update() {
         guess += letter;
     }
 
-    guess = guess.toLowerCase();
-    console.log(guess);
+    guess = guess.toUpperCase(); // Convert guess to uppercase
+    console.log("Guess: ", guess);
 
-    if (!guessList.includes(guess)) {
+    // Check if guess is in the word list
+    if (!wordList.includes(guess)) {
         document.getElementById("answer").innerText = "Not in word list";
         return;
     }
