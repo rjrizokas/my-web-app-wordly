@@ -4,6 +4,10 @@ import os
 
 API_TOKEN = '7439794203:AAEQGaP_uSsTh7c5onzP1VMrLo9VO1rmmtk'
 
+WEBHOOK_HOST = 'https://my-web-app-wordly-tg.onrender.com'
+WEBHOOK_PATH = '/webhook'
+WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
+
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
@@ -26,4 +30,20 @@ async def start(message: types.Message):
             url=f'https://rjrizokas.github.io/my-web-app-wordly/update1.html?user_id={user_id}')))
     await message.answer('Что наша жизнь?', reply_markup=markup)
 
-executor.start_polling(dp)
+async def on_startup(dp):
+    await bot.set_webhook(WEBHOOK_URL)
+
+async def on_shutdown(dp):
+    await bot.delete_webhook()
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    start_webhook(
+        dispatcher=dp,
+        webhook_path=WEBHOOK_PATH,
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        skip_updates=True,
+        host='0.0.0.0',
+        port=port
+    )
