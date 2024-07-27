@@ -6,8 +6,10 @@ let col = 0; // current letter for that attempt
 
 let gameOver = false;
 let word = ''; // The word to guess, initialized as empty
-let wordList = []; // List of valid words
-let guessList = []; // List of guesses made
+let wordList = ["агава", "аллах"]
+let guessList = ["ааааа"];
+
+guessList = guessList.concat(wordList);
 
 window.onload = function() {
     intialize();
