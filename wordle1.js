@@ -287,7 +287,7 @@ async function saveProgress() {
     };
 
     try {
-        const response = await fetch('https://my-web-app-wordly.onrender.com/save_progress', {
+        const response = await fetch('https://my-web-app-wordly.onrender.com/save_progress1', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -312,7 +312,7 @@ async function loadProgress() {
     }
 
     try {
-        const response = await fetch(`https://my-web-app-wordly.onrender.com/get_progress?user_id=${user_id}`);
+        const response = await fetch(`https://my-web-app-wordly.onrender.com/get_progress1?user_id=${user_id}`);
         const data = await response.json();
         const progress = data.progress;
 
