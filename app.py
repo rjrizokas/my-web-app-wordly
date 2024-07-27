@@ -5,6 +5,9 @@ import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import datetime
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+import pytz
 
 app = Flask(__name__)
 CORS(app)
@@ -94,6 +97,22 @@ def update_daily_user_data(file_path, data):
         update_github_file_content(file_path, file_content)
     except Exception as e:
         print(f"Failed to update daily user data: {e}")
+
+def reset_daily_data():
+    try:
+        user_data = get_daily_user_data(DAILY_USER_DATA_FILE_PATH)
+        today = datetime.datetime.now().strftime('%Y-%m-%d')
+        for user_id in user_data:
+            user_data[user_id] = {
+                "guessList": [],
+                "currentRow": 0,
+                "currentCol": 0,
+                "last_reset_date": today
+            }
+        update_daily_user_data(DAILY_USER_DATA_FILE_PATH, user_data)
+        print("Daily user data reset successfully!")
+    except Exception as e:
+        print(f"Failed to reset daily user data: {e}")
 
 @app.route('/get_word', methods=['GET'])
 def get_word():
@@ -219,6 +238,11 @@ def get_progress():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Запуск планировщика с указанием часового пояса
+timezone = pytz.timezone('Europe/Berlin')
+scheduler = BackgroundScheduler()
+scheduler.add_job(reset_daily_data, CronTrigger(hour=0, minute=0, timezone=timezone))
+scheduler.start()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))  # Запускаем на порту 5000
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
