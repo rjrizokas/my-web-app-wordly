@@ -36,6 +36,21 @@ async function fetchWord() {
         console.error('Error fetching word:', error);
     }
 }
+
+async function fetchWordList() {
+    try {
+        console.log("Fetching word list from server...");
+        const response = await fetch('https://my-web-app-wordly.onrender.com/get_wordlist');
+        const data = await response.json();
+        wordList = data.wordlist.map(word => word.toUpperCase()); // Ensure all words are uppercase
+        guessList = guessList.concat(wordList);
+        console.log("Word list:", wordList);
+    } catch (error) {
+        console.error('Error fetching word list:', error);
+        alert('Error fetching word list.');
+    }
+}
+
 function intialize() {
     // Create the game board
     for (let r = 0; r < height; r++) {
