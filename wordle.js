@@ -32,12 +32,24 @@ async function fetchWord() {
         console.log("Fetching word from server...");
         const response = await fetch('https://my-web-app-wordly.onrender.com/get_word');
         const data = await response.json();
+
+        const lastUpdated = new Date(data.last_updated);
+        const currentDate = new Date();
+        const timeDifference = currentDate - lastUpdated;
+        const daysDifference = timeDifference / (1000 * 3600 * 24);
+
+        if (daysDifference > 8) {
+            alert("Новых слов нет.");
+            return; // Остановить дальнейшее выполнение функции
+        }
+
         word = data.word.toUpperCase();
         console.log("Current word: ", word);
     } catch (error) {
         console.error('Error fetching word:', error);
     }
 }
+
 
 async function fetchWordList() {
     try {
