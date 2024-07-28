@@ -116,9 +116,17 @@ def reset_daily_data():
 
 @app.route('/get_word', methods=['GET'])
 def get_word():
-    day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
-    word = words.get(day_of_week, "СЛОВО")
-    return jsonify({"word": word})
+    try:
+        with open(WORDS_FILE_PATH, 'r', encoding='utf-8') as file:
+            words = json.load(file)
+        today = datetime.datetime.now().strftime('%A').lower()
+        word_of_the_day = words.get(today, "")
+        last_updated = words.get("last_updated", "")
+        return jsonify({"word": word_of_the_day, "last_updated": last_updated})
+    except Exception as e:
+        print(f"Failed to get word: {e}")
+        return jsonify({"message": "Error fetching word!"}), 500
+
 
 @app.route('/get_word1', methods=['GET'])
 def get_word1():
