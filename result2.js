@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => populateTable(data, 'Слово от Виорики'));
 });
 
+const usernames = {
+    "1719750087": "nft337",
+    "253293158": "vio_goncharova",
+    "5038756": "bormts",
+    "96546832": "aantropov",
+    "6249399528": "rizo337"
+};
+
 function populateTable(data, title) {
     const table = document.getElementById('results_table');
     const headerRow = table.insertRow();
@@ -22,10 +30,12 @@ function populateTable(data, title) {
     // Insert data rows
     for (const [date, users] of Object.entries(data)) {
         for (const [userId, attempts] of Object.entries(users)) {
+            const username = usernames[userId] || userId; // Use nickname if available, otherwise default to userId
+
             const userRow = table.insertRow();
             const userIdCell = userRow.insertCell();
             userIdCell.colSpan = 2;
-            userIdCell.innerHTML = userId;
+            userIdCell.innerHTML = username;
             userIdCell.style.backgroundColor = '#f9f9f9';
             
             const attemptsRow = table.insertRow();
