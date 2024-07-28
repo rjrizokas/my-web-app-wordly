@@ -130,12 +130,17 @@ def get_word1():
 def get_wordlist():
     return jsonify({"wordlist": wordlist})
 
+
 @app.route('/update_word', methods=['POST'])
 def update_word():
     data = request.json
     for key in data:
         if key in words:
             words[key] = data[key]
+    
+    # Добавляем или обновляем дату последнего изменения
+    words["last_updated"] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     file_content = json.dumps(words, ensure_ascii=False)
     try:
         update_github_file_content(WORDS_FILE_PATH, file_content)
@@ -143,6 +148,7 @@ def update_word():
     except Exception as e:
         print(f"Failed to update words: {e}")
         return jsonify({"message": "Error updating words!"}), 500
+
 
 @app.route('/update_word1', methods=['POST'])
 def update_word1():
