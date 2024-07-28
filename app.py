@@ -67,6 +67,21 @@ def update_github_file_content(file_path, file_content):
         print("Error updating file:", response.status_code, response.json())
         response.raise_for_status()
 
+try:
+    words = get_github_file_content(WORDS_FILE_PATH)
+    wordlist = get_github_file_content(WORDLIST_FILE_PATH)
+except Exception as e:
+    print(f"Failed to fetch words or wordlist: {e}")
+    words = {}
+    wordlist = []
+
+try:
+    words1 = get_github_file_content(WORDS1_FILE_PATH)
+except Exception as e:
+    print(f"Failed to fetch words or wordlist: {e}")
+    words1 = {}
+
+
 def copy_file_content(source_path, destination_path):
     try:
         content = get_github_file_content(source_path)
