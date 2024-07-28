@@ -70,10 +70,11 @@ async function updateAllWords() {
 
      for (const word of Object.values(words1)) {
         if (word !== words1.last_updated && !wordList.includes(word)) {
-            alert(Ошибка: слово '${word}' не входит в список допустимых слов.);
+            alert(`Ошибка: слово '${word}' не входит в список допустимых слов.`);
             return;
         }
     }
+
     
     try {
         const response = await fetch('https://my-web-app-wordly.onrender.com/update_word1', {
