@@ -8,8 +8,6 @@ let gameOver = false;
 let word = ''; // The word to guess, initialized as empty
 let wordList = [];
 
-
-
 window.onload = function() {
     intialize();
     fetchWordList().then(() => {
@@ -21,11 +19,13 @@ window.onload = function() {
     });
 
     // Add event listener for the Update Word button
-    document.getElementById('updateWord').addEventListener('click', () => {
-        fetchWord(); // Fetch the word again when the button is clicked
-    });
+    const updateWordButton = document.getElementById('updateWord');
+    if (updateWordButton) {
+        updateWordButton.addEventListener('click', () => {
+            fetchWord(); // Fetch the word again when the button is clicked
+        });
+    }
 }
-
 
 async function fetchWord() {
     try {
@@ -52,7 +52,6 @@ async function fetchWord() {
     }
 }
 
-
 async function fetchWordList() {
     try {
         const response = await fetch('https://my-web-app-wordly.onrender.com/get_wordlist');
@@ -64,8 +63,6 @@ async function fetchWordList() {
         alert('Ошибка загрузки списка допустимых слов.');
     }
 }
-
-
 
 function intialize() {
     // Create the game board
@@ -96,9 +93,9 @@ function intialize() {
 
             let key = currRow[j];
             keyTile.innerText = key;
-            if (key == "Enter") {
+            if (key === "Enter") {
                 keyTile.id = "Enter";
-            } else if (key == "⌫") {
+            } else if (key === "⌫") {
                 keyTile.id = "Backspace";
             } else {
                 keyTile.id = "Key" + key;
@@ -106,9 +103,9 @@ function intialize() {
 
             keyTile.addEventListener("click", processKey);
 
-            if (key == "Enter") {
+            if (key === "Enter") {
                 keyTile.classList.add("enter-key-tile");
-            } else if (key == "⌫") {
+            } else if (key === "⌫") {
                 keyTile.classList.add("backspace-key-tile");
             } else {
                 keyTile.classList.add("key-tile");
@@ -143,7 +140,6 @@ function getLetterFromKeyCode(keyCode) {
     return "";
 }
 
-
 function processKey() {
     let key = this.id;
     if (key === "Enter" || key === "Backspace") {
@@ -155,9 +151,6 @@ function processKey() {
         processInput(event);
     }
 }
-
-
-
 
 function processInput(e) {
     console.log(`Processing input: ${e.code}`);
@@ -194,14 +187,11 @@ function processInput(e) {
     }
 }
 
-
-
-
-
 function update() {
     let guess = "";
     document.getElementById("answer").innerText = "";
 
+    // Сборка слова из текущего ввода
     for (let c = 0; c < width; c++) {
         let currTile = document.getElementById(row.toString() + '-' + c.toString());
         let letter = currTile.innerText;
@@ -218,7 +208,9 @@ function update() {
 
     let correct = 0;
     let letterCount = {};
+    let letterStatus = {}; // Для хранения статуса каждой буквы
 
+    // Инициализация счетчика букв для проверки
     for (let i = 0; i < word.length; i++) {
         let letter = word[i];
         if (letterCount[letter]) {
@@ -228,52 +220,76 @@ function update() {
         }
     }
 
-    for (let c = 0; c < width; c++) {
-        let currTile = document.getElementById(row.toString() + '-' + c.toString());
+    // Первая итерация: Проверка правильных букв (в том числе правильных по месту)
+    for (let i = 0; i < width; i++) {
+        let currTile = document.getElementById(row.toString() + '-' + i.toString());
         let letter = currTile.innerText;
-
-        if (word[c] === letter) {
+        if (letter === word[i]) {
             currTile.classList.add("correct");
-            let keyTile = document.getElementById("Key" + letter);
-            if (keyTile) {
-                keyTile.classList.remove("present");
-                keyTile.classList.add("correct");
-            }
-            correct += 1;
             letterCount[letter] -= 1;
-        }
-
-        if (correct === width) {
-            gameOver = true;
+            letterStatus[letter] = 'correct'; // Отметить букву как 'correct'
+            correct += 1;
         }
     }
 
-    for (let c = 0; c < width; c++) {
-        let currTile = document.getElementById(row.toString() + '-' + c.toString());
+    // Вторая итерация: Проверка букв, которые есть в слове, но стоят не на своих местах
+    for (let i = 0; i < width; i++) {
+        let currTile = document.getElementById(row.toString() + '-' + i.toString());
         let letter = currTile.innerText;
-
-        if (!currTile.classList.contains("correct")) {
+        if (letter !== word[i]) {
             if (word.includes(letter) && letterCount[letter] > 0) {
                 currTile.classList.add("present");
-                let keyTile = document.getElementById("Key" + letter);
-                if (keyTile && !keyTile.classList.contains("correct")) {
-                    keyTile.classList.add("present");
+                if (!letterStatus[letter]) {
+                    letterStatus[letter] = 'present'; // Отметить букву как 'present'
                 }
                 letterCount[letter] -= 1;
             } else {
-                currTile.classList.add("absent");
-                let keyTile = document.getElementById("Key" + letter);
-                if (keyTile) {
+                if (!letterStatus[letter]) {
+                    letterStatus[letter] = 'absent'; // Отметить букву как 'absent', если нет других статусов
+                }
+            }
+        }
+    }
+
+    // Подсветка клавиатуры
+    for (let key in letterStatus) {
+        let keyTile = document.getElementById("Key" + key);
+        if (keyTile) {
+            // Убедитесь, что статус обновляется только в определенном порядке
+            if (letterStatus[key] === 'correct') {
+                keyTile.classList.add("correct");
+                keyTile.classList.remove("present");
+                keyTile.classList.remove("absent");
+            } else if (letterStatus[key] === 'present') {
+                if (!keyTile.classList.contains("correct")) {
+                    keyTile.classList.add("present");
+                }
+                keyTile.classList.remove("absent");
+            } else if (letterStatus[key] === 'absent') {
+                if (!keyTile.classList.contains("correct") && !keyTile.classList.contains("present")) {
                     keyTile.classList.add("absent");
                 }
             }
         }
     }
 
-    row += 1;
-    col = 0;
-    saveProgress(); // Save progress after each attempt
+    if (correct === width) {
+        gameOver = true;
+        document.getElementById("answer").innerText = "Поздравляю, вы угадали слово Романа!";
+    } else {
+        col = 0;
+        row += 1;
+    }
+saveProgress(); // Save progress after each attempt
 }
+
+  
+
+
+ 
+
+
+
 
 
 async function saveProgress() {
@@ -403,7 +419,6 @@ async function loadProgress() {
     } catch (error) {
         console.error('Error loading progress:', error);
     }
+
 }
-
-
 
