@@ -5,34 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Обновить слова</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .form-group {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .form-group label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 70%;
+            color: #333;
+            font-weight: bold;
+            text-align: center;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .column {
+            margin: 0 10px;
+        }
+    </style>
 </head>
 <body>
     <button id="update-all" onclick="updateAllWords()">Обновить слова</button>
     <div class="container">
         <div class="column">
-            <form id="form-monday">
-                <input type="text" id="word1" placeholder="Понедельник">
-            </form>
-            <form id="form-tuesday">
-                <input type="text" id="word2" placeholder="Вторник">
-            </form>
-            <form id="form-wednesday">
-                <input type="text" id="word3" placeholder="Среда">
-            </form>
-            <form id="form-thursday">
-                <input type="text" id="word4" placeholder="Четверг">
-            </form>
+            <div class="form-group">
+                <label for="word1">Понедельник</label>
+                <form id="form-monday">
+                    <input type="text" id="word1" placeholder="Введите слово">
+                </form>
+            </div>
+            <div class="form-group">
+                <label for="word2">Вторник</label>
+                <form id="form-tuesday">
+                    <input type="text" id="word2" placeholder="Введите слово">
+                </form>
+            </div>
+            <div class="form-group">
+                <label for="word3">Среда</label>
+                <form id="form-wednesday">
+                    <input type="text" id="word3" placeholder="Введите слово">
+                </form>
+            </div>
+            <div class="form-group">
+                <label for="word4">Четверг</label>
+                <form id="form-thursday">
+                    <input type="text" id="word4" placeholder="Введите слово">
+                </form>
+            </div>
         </div>
         <div class="column">
-            <form id="form-friday">
-                <input type="text" id="word5" placeholder="Пятница">
-            </form>
-            <form id="form-saturday">
-                <input type="text" id="word6" placeholder="Суббота">
-            </form>
-            <form id="form-sunday">
-                <input type="text" id="word7" placeholder="Воскресенье">
-            </form>
+            <div class="form-group">
+                <label for="word5">Пятница</label>
+                <form id="form-friday">
+                    <input type="text" id="word5" placeholder="Введите слово">
+                </form>
+            </div>
+            <div class="form-group">
+                <label for="word6">Суббота</label>
+                <form id="form-saturday">
+                    <input type="text" id="word6" placeholder="Введите слово">
+                </form>
+            </div>
+            <div class="form-group">
+                <label for="word7">Воскресенье</label>
+                <form id="form-sunday">
+                    <input type="text" id="word7" placeholder="Введите слово">
+                </form>
+            </div>
         </div>
     </div>
     <script src="update.js"></script>
