@@ -96,9 +96,9 @@ function intialize() {
 
             let key = currRow[j];
             keyTile.innerText = key;
-            if (key == "Enter") {
+            if (key === "Enter") {
                 keyTile.id = "Enter";
-            } else if (key == "⌫") {
+            } else if (key === "⌫") {
                 keyTile.id = "Backspace";
             } else {
                 keyTile.id = "Key" + key;
@@ -106,9 +106,9 @@ function intialize() {
 
             keyTile.addEventListener("click", processKey);
 
-            if (key == "Enter") {
+            if (key === "Enter") {
                 keyTile.classList.add("enter-key-tile");
-            } else if (key == "⌫") {
+            } else if (key === "⌫") {
                 keyTile.classList.add("backspace-key-tile");
             } else {
                 keyTile.classList.add("key-tile");
@@ -143,7 +143,6 @@ function getLetterFromKeyCode(keyCode) {
     return "";
 }
 
-
 function processKey() {
     let key = this.id;
     if (key === "Enter" || key === "Backspace") {
@@ -155,9 +154,6 @@ function processKey() {
         processInput(event);
     }
 }
-
-
-
 
 function processInput(e) {
     console.log(`Processing input: ${e.code}`);
@@ -193,7 +189,6 @@ function processInput(e) {
         document.getElementById("answer").innerText = word;
     }
 }
-
 
 
 
