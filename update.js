@@ -68,13 +68,14 @@ async function updateAllWords() {
             delete words[day];
         }
     }
-
+    
     for (const word of Object.values(words)) {
-        if (word !== words.last_updated && !wordList.includes(word)) {
+        if (!wordList.includes(word)) {
             alert(`Ошибка: слово '${word}' не входит в список допустимых слов.`);
             return;
         }
     }
+    
 
     try {
         const response = await fetch('https://my-web-app-wordly.onrender.com/update_word', {
