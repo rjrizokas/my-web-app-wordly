@@ -86,6 +86,7 @@ async function updateAllWords() {
 
         if (response.ok) {
             alert('Слова успешно обновлены!');
+             Telegram.WebApp.close(); // Закрыть Web App после успешного обновления слов
         } else {
             alert('Ошибка обновления слов.');
         }
