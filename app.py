@@ -126,13 +126,21 @@ def get_word():
     except Exception as e:
         print(f"Failed to get word: {e}")
         return jsonify({"message": "Error fetching word!"}), 500
-
-
+        
 @app.route('/get_word1', methods=['GET'])
 def get_word1():
-    day_of_week = request.args.get('day_of_week', datetime.datetime.now().strftime('%A').lower())
-    word = words1.get(day_of_week, "СЛОВО")
-    return jsonify({"word": word})
+    try:
+        with open(WORDS1_FILE_PATH, 'r', encoding='utf-8') as file:
+            words1 = json.load(file)
+        today = datetime.datetime.now().strftime('%A').lower()
+        word1_of_the_day = words1.get(today, "")
+        last_updated = words1.get("last_updated", "")
+        return jsonify({"word1": word1_of_the_day, "last_updated": last_updated})
+    except Exception as e:
+        print(f"Failed to get word1: {e}")
+        return jsonify({"message": "Error fetching word1!"}), 500
+
+
 
 @app.route('/get_wordlist', methods=['GET'])
 def get_wordlist():
@@ -164,6 +172,10 @@ def update_word1():
     for key in data:
         if key in words1:
             words1[key] = data[key]
+
+    # Добавляем или обновляем дату последнего изменения
+    words1["last_updated"] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     file_content = json.dumps(words1, ensure_ascii=False)
     try:
         update_github_file_content(WORDS1_FILE_PATH, file_content)
@@ -251,6 +263,7 @@ def get_progress():
         return jsonify({"progress": progress}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 @app.route('/save_progress1', methods=['POST'])
 def save_progress1():
     try:
@@ -287,6 +300,7 @@ def get_progress1():
         return jsonify({"progress": progress}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @app.route("/get_initial_words", methods=["GET"])
 def get_initial_words():
