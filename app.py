@@ -133,12 +133,12 @@ def get_word1():
         with open(WORDS1_FILE_PATH, 'r', encoding='utf-8') as file:
             words1 = json.load(file)
         today = datetime.datetime.now().strftime('%A').lower()
-        word1_of_the_day = words1.get(today, "")
+        word_of_the_day = words1.get(today, "")
         last_updated = words1.get("last_updated", "")
-        return jsonify({"word1": word1_of_the_day, "last_updated": last_updated})
+        return jsonify({"word": word_of_the_day, "last_updated": last_updated})
     except Exception as e:
-        print(f"Failed to get word1: {e}")
-        return jsonify({"message": "Error fetching word1!"}), 500
+        print(f"Failed to get word: {e}")
+        return jsonify({"message": "Error fetching word!"}), 500
 
 
 
