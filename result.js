@@ -7,25 +7,23 @@ document.addEventListener('DOMContentLoaded', function () {
         "6249399528": "rizo337"
     };
 
-    fetch('daily_user_data_yesterday.json')
-        .then(response => response.json())
-        .then(data => populateTable(data, 'daily_user_data'));
-
-    fetch('daily_user_data1_yesterday.json')
-        .then(response => response.json())
-        .then(data => populateTable(data, 'daily_user_data1'));
+    function fetchDataAndPopulate(url, tableId) {
+        fetch(url)
+            .then(response => response.json())
+            .then(data => populateTable(data, tableId))
+            .catch(error => console.error('Error fetching data:', error));
+    }
 
     function populateTable(data, tableId) {
         const table = document.getElementById(tableId);
-        const headerRow = table.insertRow();
+        table.innerHTML = '';  // Clear existing content
 
-        // Create header cells
+        const headerRow = table.insertRow();
         const headerUserId = headerRow.insertCell();
         headerUserId.innerHTML = 'User ID';
         const headerAttempts = headerRow.insertCell();
         headerAttempts.innerHTML = 'Attempts';
 
-        // Loop through data and create rows
         for (const [date, users] of Object.entries(data)) {
             for (const [userId, attempts] of Object.entries(users)) {
                 const row = table.insertRow();
@@ -35,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const cellAttempts = row.insertCell();
                 const attemptContainer = document.createElement('div');
 
-                // Create grid for attempts
                 for (let i = 0; i < 6; i++) {
                     for (let j = 0; j < 5; j++) {
                         const cell = document.createElement('div');
@@ -51,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
+
+    fetchDataAndPopulate('daily_user_data_yesterday.json', 'daily_user_data');
+    fetchDataAndPopulate('daily_user_data1_yesterday.json', 'daily_user_data1');
 });
-
-
-
