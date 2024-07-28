@@ -277,9 +277,10 @@ function update() {
         gameOver = true;
         document.getElementById("answer").innerText = "Поздравляю, вы угадали слово Романа!";
     } else {
-        col = 0;
-        row += 1;
+    
     }
+    row += 1;
+    col = 0;
 saveProgress(); // Save progress after each attempt
 }
 
