@@ -40,6 +40,8 @@ async function fetchWord() {
 
         if (daysDifference > 8) {
             alert("Новых слов нет.");
+            Telegram.WebApp.close(); // Закрыть Web App после успешного обновления слов
+
             return; // Остановить дальнейшее выполнение функции
         }
 
