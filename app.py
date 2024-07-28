@@ -290,6 +290,27 @@ def get_initial_words1():
     except Exception as e:
         return {"error": str(e)}
 
+@app.route('/add_word', methods=['POST'])
+def add_word():
+    data = request.json
+    new_word = data.get('word', '').upper()
+
+    if len(new_word) != 5:
+        return jsonify({"message": "Слово должно состоять из 5 букв."}), 400
+
+    if new_word in wordlist:
+        return jsonify({"message": "Слово уже есть в списке."}), 400
+
+    wordlist.append(new_word)
+    file_content = json.dumps(wordlist, ensure_ascii=False)
+
+    try:
+        update_github_file_content(WORDLIST_FILE_PATH, file_content)
+        return jsonify({"message": "Слово успешно добавлено!"})
+    except Exception as e:
+        print(f"Failed to update wordlist: {e}")
+        return jsonify({"message": "Ошибка при добавлении слова."}), 500
+
 
         
 # Запуск планировщика с указанием часового пояса
