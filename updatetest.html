@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обновить слова</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            font-size: 70%;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <button id="update-all" onclick="updateAllWords()">Обновить слова</button>
+    <div class="container">
+        <div class="column">
+            <div class="form-group">
+                <label for="word1">Понедельник</label>
+                <form id="form-monday">
+                    <input type="text" id="word1" placeholder="Введите слово">
+                </form>
+            </div>
+            <div class="form-group">
+                <label for="word2">Вторник</label>
+                <form id="form-tuesday">
+                    <input type="text" id="word2" placeholder="Введите слово">
+                </form>
+            </div>
+            <div class="form-group">
+                <label for="word3">Среда</label>
+                <form id="form-wednesday">
+                    <input type="text" id="word3" placeholder="Введите слово">
+                </form>
+            </div>
+            <div class="form-group">
+                <label for="word4">Четверг</label>
+                <form id="form-thursday">
+                    <input type="text" id="word4" placeholder="Введите слово">
+                </form>
+            </div>
+        </div>
+        <div class="column">
+            <div class="form-group">
+                <label for="word5">Пятница</label>
+                <form id="form-friday">
+                    <input type="text" id="word5" placeholder="Введите слово">
+                </form>
+            </div>
+            <div class="form-group">
+                <label for="word6">Суббота</label>
+                <form id="form-saturday">
+                    <input type="text" id="word6" placeholder="Введите слово">
+                </form>
+            </div>
+            <div class="form-group">
+                <label for="word7">Воскресенье</label>
+                <form id="form-sunday">
+                    <input type="text" id="word7" placeholder="Введите слово">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="update.js"></script>
+</body>
+</html>
