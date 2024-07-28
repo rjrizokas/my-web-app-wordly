@@ -21,6 +21,8 @@ document.getElementById('add-word-form').addEventListener('submit', async functi
         if (response.ok) {
             messageDiv.textContent = 'Слово успешно добавлено!';
             messageDiv.style.color = 'green';
+                        Telegram.WebApp.close(); // Закрыть Web App после успешного обновления слов
+
         } else {
             const errorData = await response.json();
             messageDiv.textContent = `Ошибка: ${errorData.message}`;
