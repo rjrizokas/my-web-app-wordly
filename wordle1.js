@@ -8,8 +8,6 @@ let gameOver = false;
 let word = ''; // The word to guess, initialized as empty
 let wordList = [];
 
-
-
 window.onload = function() {
     intialize();
     fetchWordList().then(() => {
@@ -21,9 +19,12 @@ window.onload = function() {
     });
 
     // Add event listener for the Update Word button
-    document.getElementById('updateWord').addEventListener('click', () => {
-        fetchWord(); // Fetch the word again when the button is clicked
-    });
+    const updateWordButton = document.getElementById('updateWord');
+    if (updateWordButton) {
+        updateWordButton.addEventListener('click', () => {
+            fetchWord(); // Fetch the word again when the button is clicked
+        });
+    }
 }
 
 
