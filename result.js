@@ -18,12 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const table = document.getElementById(tableId);
         table.innerHTML = '';  // Clear existing content
 
-        const headerRow = table.insertRow();
-        const headerUserId = headerRow.insertCell();
-        headerUserId.innerHTML = 'User ID';
-        const headerAttempts = headerRow.insertCell();
-        headerAttempts.innerHTML = 'Attempts';
-
         for (const [date, users] of Object.entries(data)) {
             for (const [userId, attempts] of Object.entries(users)) {
                 const row = table.insertRow();
