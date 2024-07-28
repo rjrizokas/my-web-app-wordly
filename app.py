@@ -23,6 +23,8 @@ WORDS1_FILE_PATH = 'words1.json'
 WORDLIST_FILE_PATH = 'wordlist.json'
 DAILY_USER_DATA_FILE_PATH = 'daily_user_data.json'
 DAILY_USER_DATA1_FILE_PATH = 'daily_user_data1.json'
+timezone = pytz.timezone('Europe/Berlin')
+
 
 def get_github_file_content(file_path):
     url = f'https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{file_path}'
@@ -120,13 +122,14 @@ def reset_daily_data():
         print("Daily user data reset successfully!")
     except Exception as e:
         print(f"Failed to reset daily user data: {e}")
-
+        
 @app.route('/get_word', methods=['GET'])
 def get_word():
     try:
         with open(WORDS_FILE_PATH, 'r', encoding='utf-8') as file:
             words = json.load(file)
-        today = datetime.datetime.now().strftime('%A').lower()
+        now = datetime.datetime.now(timezone)
+        today = now.strftime('%A').lower()
         word_of_the_day = words.get(today, "")
         last_updated = words.get("last_updated", "")
         return jsonify({"word": word_of_the_day, "last_updated": last_updated})
@@ -139,7 +142,8 @@ def get_word1():
     try:
         with open(WORDS1_FILE_PATH, 'r', encoding='utf-8') as file:
             words1 = json.load(file)
-        today = datetime.datetime.now().strftime('%A').lower()
+        now = datetime.datetime.now(timezone)
+        today = now.strftime('%A').lower()
         word_of_the_day = words1.get(today, "")
         last_updated = words1.get("last_updated", "")
         return jsonify({"word": word_of_the_day, "last_updated": last_updated})
