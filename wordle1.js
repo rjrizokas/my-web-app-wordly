@@ -197,6 +197,7 @@ function update() {
     let guess = "";
     document.getElementById("answer").innerText = "";
 
+    // Сборка слова из текущего ввода
     for (let c = 0; c < width; c++) {
         let currTile = document.getElementById(row.toString() + '-' + c.toString());
         let letter = currTile.innerText;
@@ -213,7 +214,9 @@ function update() {
 
     let correct = 0;
     let letterCount = {};
+    let letterStatus = {}; // Для хранения статуса каждой буквы
 
+    // Инициализация счетчика букв для проверки
     for (let i = 0; i < word.length; i++) {
         let letter = word[i];
         if (letterCount[letter]) {
@@ -223,53 +226,69 @@ function update() {
         }
     }
 
-    for (let c = 0; c < width; c++) {
-        let currTile = document.getElementById(row.toString() + '-' + c.toString());
+    // Первая итерация: Проверка правильных букв (в том числе правильных по месту)
+    for (let i = 0; i < width; i++) {
+        let currTile = document.getElementById(row.toString() + '-' + i.toString());
         let letter = currTile.innerText;
-
-        if (word[c] === letter) {
+        if (letter === word[i]) {
             currTile.classList.add("correct");
-            let keyTile = document.getElementById("Key" + letter);
-            if (keyTile) {
-                keyTile.classList.remove("present");
-                keyTile.classList.add("correct");
-            }
-            correct += 1;
             letterCount[letter] -= 1;
-        }
-
-        if (correct === width) {
-            gameOver = true;
+            letterStatus[letter] = 'correct'; // Отметить букву как 'correct'
+            correct += 1;
         }
     }
 
-    for (let c = 0; c < width; c++) {
-        let currTile = document.getElementById(row.toString() + '-' + c.toString());
+    // Вторая итерация: Проверка букв, которые есть в слове, но стоят не на своих местах
+    for (let i = 0; i < width; i++) {
+        let currTile = document.getElementById(row.toString() + '-' + i.toString());
         let letter = currTile.innerText;
-
-        if (!currTile.classList.contains("correct")) {
+        if (letter !== word[i]) {
             if (word.includes(letter) && letterCount[letter] > 0) {
                 currTile.classList.add("present");
-                let keyTile = document.getElementById("Key" + letter);
-                if (keyTile && !keyTile.classList.contains("correct")) {
-                    keyTile.classList.add("present");
+                if (!letterStatus[letter]) {
+                    letterStatus[letter] = 'present'; // Отметить букву как 'present'
                 }
                 letterCount[letter] -= 1;
             } else {
-                currTile.classList.add("absent");
-                let keyTile = document.getElementById("Key" + letter);
-                if (keyTile) {
+                if (!letterStatus[letter]) {
+                    letterStatus[letter] = 'absent'; // Отметить букву как 'absent', если нет других статусов
+                }
+            }
+        }
+    }
+
+    // Подсветка клавиатуры
+    for (let key in letterStatus) {
+        let keyTile = document.getElementById("Key" + key);
+        if (keyTile) {
+            // Убедитесь, что статус обновляется только в определенном порядке
+            if (letterStatus[key] === 'correct') {
+                keyTile.classList.add("correct");
+                keyTile.classList.remove("present");
+                keyTile.classList.remove("absent");
+            } else if (letterStatus[key] === 'present') {
+                if (!keyTile.classList.contains("correct")) {
+                    keyTile.classList.add("present");
+                }
+                keyTile.classList.remove("absent");
+            } else if (letterStatus[key] === 'absent') {
+                if (!keyTile.classList.contains("correct") && !keyTile.classList.contains("present")) {
                     keyTile.classList.add("absent");
                 }
             }
         }
     }
 
+    if (correct === width) {
+        gameOver = true;
+        document.getElementById("answer").innerText = "Поздравляю, вы угадали слово Романа!";
+    } else {
+    
+    }
     row += 1;
     col = 0;
-    saveProgress(); // Save progress after each attempt
+saveProgress(); // Save progress after each attempt
 }
-
 
 async function saveProgress() {
     const user_id = new URLSearchParams(window.location.search).get('user_id');
