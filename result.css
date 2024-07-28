@@ -11,15 +11,21 @@ h1 {
     margin-bottom: 10px;
 }
 
+.results-container {
+    display: flex;
+    justify-content: space-between; /* Распределение пространства между таблицами */
+    flex-wrap: wrap; /* Позволяет таблицам переноситься на новую строку, если не хватает места */
+}
+
 .result-table {
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 5px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     background-color: #ffffff; /* Убедитесь, что фон таблицы белый */
-    width: auto; /* Автоматическая ширина для таблиц */
-    max-width: 100%; /* Максимальная ширина 100% от родителя */
-    margin: 0 auto; /* Центрирование таблиц */
+    width: 48%; /* Ширина таблицы 48%, чтобы оставить немного места между ними */
+    max-width: 48%; /* Максимальная ширина таблицы 48% */
+    box-sizing: border-box; /* Учитывает padding и border в ширину элемента */
 }
 
 h2 {
@@ -50,7 +56,16 @@ th, td {
 }
 
 @media (max-width: 600px) {
+    .results-container {
+        flex-direction: column; /* Перенос таблиц на новую строку при маленьком экране */
+    }
+
     .result-table {
-        font-size: 0.6em;  /* Уменьшенный размер шрифта для маленьких экранов */
+        width: 100%; /* Таблицы будут занимать всю ширину экрана на маленьких устройствах */
+        max-width: 100%;
+    }
+
+    .result-table h2 {
+        font-size: 0.8em; /* Дополнительное уменьшение размера заголовков на маленьких экранах */
     }
 }
