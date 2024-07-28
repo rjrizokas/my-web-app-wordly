@@ -21,6 +21,12 @@ body {
     flex-direction: column;
 }
 
+.form-group {
+    width: 100%; /* Полная ширина родительского контейнера */
+    max-width: 300px; /* Установить максимальную ширину для формы */
+    margin: 0 auto; /* Центрировать форму внутри колонки */
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -31,7 +37,17 @@ input[type="text"] {
     padding: 10px;
     margin-bottom: 10px;
     font-size: 1em;
-    width: 100%; /* Полная ширина для поля ввода */
+    width: 100%; /* Ширина поля ввода установлена на 100% от родительской формы */
+    box-sizing: border-box; /* Убедиться, что padding и border включены в ширину элемента */
+}
+
+.form-group label {
+    font-size: 0.7em; /* Уменьшить размер шрифта на 30% */
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+    margin-bottom: 5px; /* Уменьшить отступ снизу, если нужно */
 }
 
 button {
