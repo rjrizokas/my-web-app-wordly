@@ -30,7 +30,7 @@ table {
 
 th, td {
     border: 1px solid #ddd;
-    padding: 4px;
+    padding: 2px;  /* Уменьшенный размер padding */
     text-align: center;
 }
 
