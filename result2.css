@@ -1,51 +1,46 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 10px;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
     padding: 0;
-    background-color: #ffffff; /* Белый фон */
 }
 
 h1 {
-    font-size: 1.2em;  /* Уменьшенный размер заголовка */
     text-align: center;
-    margin-bottom: 10px;
+    margin-top: 20px;
+    font-size: 1.5em;
 }
 
-table {
+.results-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.result-table {
+    margin-bottom: 20px;
+    width: 90%;
+    max-width: 600px;
+}
+
+.result-table table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.8em; /* Уменьшенный размер шрифта */
-    margin: 0 auto;  /* Центрируем таблицу */
 }
 
-th, td {
+.result-table td {
     border: 1px solid #ddd;
-    padding: 5px;  /* Уменьшенный padding */
-    text-align: center;
-}
-
-th {
-    background-color: #f4f4f4;
-    font-weight: bold;
+    padding: 4px;
 }
 
 .cell {
     display: inline-block;
-    width: 20px;  /* Ширина ячейки */
-    height: 20px;  /* Высота ячейки */
+    width: 20px;
+    height: 20px;
     border: 1px solid #ddd;
     text-align: center;
-    margin: 0.5px;  /* Отступ между ячейками */
-    font-size: 0.7em;  /* Размер шрифта внутри ячейки */
-}
-
-@media (max-width: 600px) {
-    table {
-        font-size: 0.7em;  /* Размер шрифта для маленьких экранов */
-    }
-
-    .cell {
-        width: 15px;  /* Уменьшение ширины ячейки на маленьких экранах */
-        height: 15px;  /* Уменьшение высоты ячейки на маленьких экранах */
-    }
+    vertical-align: middle;
+    margin: 1px;
 }
