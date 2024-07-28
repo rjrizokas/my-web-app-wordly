@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #fff;  /* Белый фон */
     color: #333;
     margin: 0;
     padding: 0;
@@ -9,33 +9,38 @@ body {
 h1 {
     text-align: center;
     margin-top: 20px;
-    font-size: 1.5em;
+    font-size: 1.2em;  /* Уменьшенный размер заголовка */
 }
 
 .results-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     padding: 20px;
-}
-
-.result-table {
-    margin-bottom: 20px;
     width: 90%;
     max-width: 600px;
+    margin: 0 auto;
 }
 
-.result-table table {
-    width: 100%;
-    border-collapse: collapse;
+.result-section {
+    margin-bottom: 20px;
 }
 
-.result-table td {
-    border: 1px solid #ddd;
-    padding: 4px;
+.result-section .nickname {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
-.cell {
+.result-section .attempts-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.result-section .attempts-container .attempt-row {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.result-section .attempts-container .cell {
     display: inline-block;
     width: 20px;
     height: 20px;
@@ -43,4 +48,5 @@ h1 {
     text-align: center;
     vertical-align: middle;
     margin: 1px;
+    font-size: 0.8em;  /* Уменьшенный размер текста внутри клеток */
 }
