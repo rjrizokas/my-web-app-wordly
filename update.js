@@ -59,17 +59,18 @@ async function updateAllWords() {
         thursday: document.getElementById('word4').value.toUpperCase(),
         friday: document.getElementById('word5').value.toUpperCase(),
         saturday: document.getElementById('word6').value.toUpperCase(),
-        sunday: document.getElementById('word7').value.toUpperCase()
+        sunday: document.getElementById('word7').value.toUpperCase(),
+        last_updated: new Date().toISOString().slice(0, 19).replace('T', ' ')
     };
 
     for (const day in words) {
-        if (words[day] === "") {
+        if (words[day] === "" && day !== 'last_updated') {
             delete words[day];
         }
     }
 
     for (const word of Object.values(words)) {
-        if (!wordList.includes(word)) {
+        if (word !== words.last_updated && !wordList.includes(word)) {
             alert(`Ошибка: слово '${word}' не входит в список допустимых слов.`);
             return;
         }
@@ -86,7 +87,7 @@ async function updateAllWords() {
 
         if (response.ok) {
             alert('Слова успешно обновлены!');
-             Telegram.WebApp.close(); // Закрыть Web App после успешного обновления слов
+            Telegram.WebApp.close(); // Закрыть Web App после успешного обновления слов
         } else {
             alert('Ошибка обновления слов.');
         }
