@@ -69,9 +69,9 @@ async function updateAllWords() {
         }
     }
     
-        for (const word of Object.values(words)) {
+     for (const word of Object.values(words)) {
         if (word !== words.last_updated && !wordList.includes(word)) {
-            alert(Ошибка: слово '${word}' не входит в список допустимых слов.);
+            alert(`Ошибка: слово '${word}' не входит в список допустимых слов.`);
             return;
         }
     }
