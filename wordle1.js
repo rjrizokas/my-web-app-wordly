@@ -281,7 +281,7 @@ function update() {
 
     if (correct === width) {
         gameOver = true;
-        document.getElementById("answer").innerText = "Поздравляю, вы угадали слово Романа!";
+        document.getElementById("answer").innerText = "Поздравляю, вы угадали слово Виорики!";
     } else {
     
     }
