@@ -31,7 +31,6 @@ def get_github_file_content(file_path):
         'Accept': 'application/vnd.github.v3+json'
     }
     response = requests.get(url, headers=headers)
-    print(f"GET request to {url} returned status code {response.status_code}")
     if response.status_code == 200:
         content = response.json()
         file_content = base64.b64decode(content['content']).decode()
@@ -48,7 +47,6 @@ def update_github_file_content(file_path, file_content):
     }
     file_content_base64 = base64.b64encode(file_content.encode()).decode()
     
-    # Получаем текущий SHA для файла
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         sha = response.json().get('sha')
@@ -59,30 +57,30 @@ def update_github_file_content(file_path, file_content):
     data = {
         'message': f'Update {file_path}',
         'content': file_content_base64,
-        'sha': sha,  # SHA текущей версии файла
+        'sha': sha,
         'branch': 'main'
     }
     response = requests.put(url, headers=headers, json=data)
-    print(f"PUT request to {url} returned status code {response.status_code}")
     if response.status_code == 200:
         return response.json()
     else:
         print("Error updating file:", response.status_code, response.json())
         response.raise_for_status()
 
-try:
-    words = get_github_file_content(WORDS_FILE_PATH)
-    wordlist = get_github_file_content(WORDLIST_FILE_PATH)
-except Exception as e:
-    print(f"Failed to fetch words or wordlist: {e}")
-    words = {}
-    wordlist = []
+def copy_file_content(source_path, destination_path):
+    try:
+        content = get_github_file_content(source_path)
+        update_github_file_content(destination_path, json.dumps(content, ensure_ascii=False))
+        print(f"Copied content from {source_path} to {destination_path} successfully!")
+    except Exception as e:
+        print(f"Failed to copy content from {source_path} to {destination_path}: {e}")
 
-try:
-    words1 = get_github_file_content(WORDS1_FILE_PATH)
-except Exception as e:
-    print(f"Failed to fetch words or wordlist: {e}")
-    words1 = {}
+def clear_file(file_path):
+    try:
+        update_github_file_content(file_path, json.dumps({}, ensure_ascii=False))
+        print(f"Cleared content of {file_path} successfully!")
+    except Exception as e:
+        print(f"Failed to clear content of {file_path}: {e}")
 
 def get_daily_user_data(file_path):
     try:
@@ -100,16 +98,10 @@ def update_daily_user_data(file_path, data):
 
 def reset_daily_data():
     try:
-        user_data = get_daily_user_data(DAILY_USER_DATA_FILE_PATH)
-        today = datetime.datetime.now().strftime('%Y-%m-%d')
-        for user_id in user_data:
-            user_data[user_id] = {
-                "guessList": [],
-                "currentRow": 0,
-                "currentCol": 0,
-                "last_reset_date": today
-            }
-        update_daily_user_data(DAILY_USER_DATA_FILE_PATH, user_data)
+        copy_file_content(DAILY_USER_DATA_FILE_PATH, 'daily_user_data_yesterday.json')
+        copy_file_content(DAILY_USER_DATA1_FILE_PATH, 'daily_user_data1_yesterday.json')
+        clear_file(DAILY_USER_DATA_FILE_PATH)
+        clear_file(DAILY_USER_DATA1_FILE_PATH)
         print("Daily user data reset successfully!")
     except Exception as e:
         print(f"Failed to reset daily user data: {e}")
@@ -140,12 +132,9 @@ def get_word1():
         print(f"Failed to get word: {e}")
         return jsonify({"message": "Error fetching word!"}), 500
 
-
-
 @app.route('/get_wordlist', methods=['GET'])
 def get_wordlist():
     return jsonify({"wordlist": wordlist})
-
 
 @app.route('/update_word', methods=['POST'])
 def update_word():
@@ -154,7 +143,6 @@ def update_word():
         if key in words:
             words[key] = data[key]
     
-    # Добавляем или обновляем дату последнего изменения
     words["last_updated"] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     file_content = json.dumps(words, ensure_ascii=False)
@@ -165,7 +153,6 @@ def update_word():
         print(f"Failed to update words: {e}")
         return jsonify({"message": "Error updating words!"}), 500
 
-
 @app.route('/update_word1', methods=['POST'])
 def update_word1():
     data = request.json
@@ -173,7 +160,6 @@ def update_word1():
         if key in words1:
             words1[key] = data[key]
 
-    # Добавляем или обновляем дату последнего изменения
     words1["last_updated"] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     file_content = json.dumps(words1, ensure_ascii=False)
@@ -301,7 +287,6 @@ def get_progress1():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 @app.route("/get_initial_words", methods=["GET"])
 def get_initial_words():
     try:
@@ -339,13 +324,9 @@ def add_word():
         print(f"Failed to update wordlist: {e}")
         return jsonify({"message": "Ошибка при добавлении слова."}), 500
 
-
-        
-# Запуск планировщика с указанием часового пояса
 timezone = pytz.timezone('Europe/Berlin')
 scheduler = BackgroundScheduler()
-scheduler.add_job(lambda: reset_daily_data(DAILY_USER_DATA_FILE_PATH), CronTrigger(hour=0, minute=0, timezone=timezone))
-scheduler.add_job(lambda: reset_daily_data(DAILY_USER_DATA1_FILE_PATH), CronTrigger(hour=0, minute=0, timezone=timezone))
+scheduler.add_job(reset_daily_data, CronTrigger(hour=0, minute=0, timezone=timezone))
 scheduler.start()
 
 if __name__ == '__main__':
