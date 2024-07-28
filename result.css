@@ -2,17 +2,13 @@ body {
     font-family: Arial, sans-serif;
     margin: 10px;
     padding: 0;
+    background-color: #ffffff; /* Установите фон белым */
 }
 
 h1 {
-    font-size: 1.5em;  /* Уменьшенный размер заголовка */
+    font-size: 1.2em;  /* Уменьшенный размер заголовка */
     text-align: center;
-}
-
-.results-container {
-    display: flex;
-    flex-direction: column;  /* Вертикальное выравнивание для мобильных устройств */
-    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .result-table {
@@ -20,12 +16,21 @@ h1 {
     border-radius: 4px;
     padding: 5px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    background-color: #ffffff; /* Убедитесь, что фон таблицы белый */
+    width: auto; /* Автоматическая ширина для таблиц */
+    max-width: 100%; /* Максимальная ширина 100% от родителя */
+    margin: 0 auto; /* Центрирование таблиц */
+}
+
+h2 {
+    font-size: 1em; /* Уменьшенный размер заголовка таблицы */
+    margin: 5px 0;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.75em;  /* Уменьшенный размер шрифта */
+    font-size: 0.7em; /* Уменьшенный размер шрифта в таблице */
 }
 
 th, td {
@@ -41,11 +46,11 @@ th, td {
     border: 1px solid #ddd;
     text-align: center;
     margin: 0.5px;  /* Уменьшенные отступы между ячейками */
-    font-size: 0.75em;  /* Уменьшенный размер шрифта внутри ячейки */
+    font-size: 0.7em;  /* Уменьшенный размер шрифта внутри ячейки */
 }
 
 @media (max-width: 600px) {
     .result-table {
-        font-size: 0.65em;  /* Уменьшенный размер шрифта для маленьких экранов */
+        font-size: 0.6em;  /* Уменьшенный размер шрифта для маленьких экранов */
     }
 }
