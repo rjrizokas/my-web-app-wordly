@@ -42,11 +42,11 @@ h1 {
 
 .result-section .attempts-container .cell {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 30px;  /* Увеличенная ширина */
+    height: 30px;  /* Увеличенная высота */
     border: 1px solid #ddd;
     text-align: center;
     vertical-align: middle;
     margin: 1px;
-    font-size: 0.8em;  /* Уменьшенный размер текста внутри клеток */
+    font-size: 1.2em;  /* Увеличенный размер текста внутри клеток */
 }
