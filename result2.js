@@ -1,10 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
     const usernames = {
-        "1719750087": "nft337",
-        "253293158": "vio_goncharova",
-        "5038756": "bormts",
-        "96546832": "aantropov",
-        "6249399528": "rizo337"
+        "1719750087": "tester2",
+        "253293158": "VI",
+        "5038756": "Nikita",
+        "96546832": "Antropov",
+        "6249399528": "tester"
+        "86286733": "Artem"
+        "124848225": "Romankosw"
+        "250997161": "Irina"
+        "103939024": "RJ"
     };
 
     function fetchDataAndPopulate(url, sectionId, title) {
