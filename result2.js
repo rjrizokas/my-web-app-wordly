@@ -4,11 +4,11 @@ document.addEventListener('DOMContentLoaded', function () {
         "253293158": "VI",
         "5038756": "Nikita",
         "96546832": "Antropov",
-        "6249399528": "tester"
-        "86286733": "Artem"
-        "124848225": "Romankosw"
-        "250997161": "Irina"
-        "103939024": "RJ"
+        "6249399528": "tester",
+        "86286733": "Artem",
+        "124848225": "Romankosw",
+        "250997161": "Irina",
+        "103939024": "RJ",
     };
 
     function fetchDataAndPopulate(url, sectionId, title) {
